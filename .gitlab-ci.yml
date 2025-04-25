@@ -1,0 +1,12 @@
+image: gitlab.ankh-local.com:5000/ankh/node:22.14.0-alpine3.20
+
+stages:
+  - build
+
+build-job:
+  stage: build
+  script:
+    - npm ci
+    - npm t       
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

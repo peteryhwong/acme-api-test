@@ -1,0 +1,31 @@
+{
+  "name": "ankh-api-test",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "format:fix": "prettier --write \"test/**/*.{ts,tsx,yml}\" 'README.md' ",
+    "format:check": "prettier --check \"test/**/*.{ts,tsx}\" ",
+    "test": "jest",
+    "generate-user-client": "npx @hey-api/openapi-ts -i https://api-dev.acme-local.online/user/openapi.json -o test/functions/client/user -c @hey-api/client-axios",
+    "generate-controller-client": "npx @hey-api/openapi-ts -i https://api-dev.acme-local.online/controller/openapi.json -o test/functions/client/controller -c @hey-api/client-axios",
+    "generate-client": "npm run generate-user-client && npm run generate-controller-client"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "@hey-api/client-axios": "^0.7.0",
+    "@types/jest": "^27.5.2",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/uuid": "^3.4.4",
+    "jest": "^29.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "mockserver-client": "^5.15.0",
+    "prettier": "^3.5.3",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "uuid": "^11.1.0"
+  }
+}

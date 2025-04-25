@@ -1,0 +1,8 @@
+{
+    "controller": {
+        "baseUrl": "https://api-dev.acme-local.online/controller"
+    },
+    "user": {
+        "baseUrl": "https://api-dev.acme-local.online/user"
+    }
+}
