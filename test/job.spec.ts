@@ -8,7 +8,7 @@ import { createDeviceReport } from './functions/report';
 import { getUserByUserNumber } from './functions/user';
 import { checkApiWithRetries } from './functions/wait';
 
-async function prepareJobContent(req: { jwtToken: string, deviceCode: string, assigneeUsername: string, userNumber: string }) {
+async function prepareJobContent(req: { jwtToken: string; deviceCode: string; assigneeUsername: string; userNumber: string }) {
     const { jwtToken, deviceCode, assigneeUsername, userNumber } = req;
 
     // get device
@@ -39,7 +39,7 @@ async function prepareJobContent(req: { jwtToken: string, deviceCode: string, as
     };
 }
 
-async function sendPingToDevice(req: { jwtToken: string, deviceId: string }) {
+async function sendPingToDevice(req: { jwtToken: string; deviceId: string }) {
     const { jwtToken, deviceId } = req;
     const commandId = await sendPing(jwtToken, deviceId); // send ping to check device
     if (!commandId) {
@@ -49,7 +49,7 @@ async function sendPingToDevice(req: { jwtToken: string, deviceId: string }) {
     return commandId;
 }
 
-async function sendJobToDevice(req: { jwtToken: string, deviceId: string, assigneeId: string, userId: string }) {
+async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string }) {
     const { jwtToken, deviceId, assigneeId, userId } = req;
 
     console.log(`Create job`);
@@ -70,17 +70,14 @@ async function sendJobToDevice(req: { jwtToken: string, deviceId: string, assign
 describe(`Add a job to device and have the device report back status to completion`, () => {
     it('Add a job to device and have the device report back status to completion', async () => {
         console.log(`Login as platform user`);
-        const jwtToken = await loginAsPlatformUser(
-            checkAndGetEnvVariable(PLATFORM_USERNAME),
-            checkAndGetEnvVariable(PLATFORM_PASSWORD),
-        );
+        const jwtToken = await loginAsPlatformUser(checkAndGetEnvVariable(PLATFORM_USERNAME), checkAndGetEnvVariable(PLATFORM_PASSWORD));
         console.log(`Got token ${jwtToken}`);
 
         const deviceCode = checkAndGetEnvVariable(DEVICE);
         const assigneeUsername = checkAndGetEnvVariable(ASSIGNEE);
 
         console.log(`Prepare job content`);
-        const { assigneeId, deviceId, userId, } = await prepareJobContent({
+        const { assigneeId, deviceId, userId } = await prepareJobContent({
             jwtToken,
             deviceCode,
             assigneeUsername,
@@ -92,7 +89,7 @@ describe(`Add a job to device and have the device report back status to completi
             jwtToken,
             deviceId,
         });
-    
+
         console.log(`Acknowledge command`);
         await acknowledge(deviceCode, pingId);
 
