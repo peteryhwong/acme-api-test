@@ -1,13 +1,13 @@
 import * as client from './client/user';
-import { checkAndGetEnvVariable, LOCAL, PLATFORM_PASSWORD, PLATFORM_USERNAME } from './constant';
+import { LOCAL } from './constant';
 
 // login as platform user where username and password supplied via env variable
-export async function loginAsPlatformUser() {
+export async function loginAsPlatformUser(username: string, password: string) {
     const res = await client.createToken({
         baseURL: LOCAL.user.baseUrl,
         body: {
-            username: checkAndGetEnvVariable(PLATFORM_USERNAME),
-            password: checkAndGetEnvVariable(PLATFORM_PASSWORD),
+            username,
+            password,
         },
     });
     if (!res.data?.token) {
