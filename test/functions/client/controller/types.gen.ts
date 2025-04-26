@@ -138,11 +138,11 @@ export type UltrasoundSetting = {
         '3MP': number;
     };
     /**
-     * Ultrasound_Pulse_Frequency
+     * Ultrasound_Pulse_Frequency: 0=10Hz/1=20Hz/2=50Hz/3=100Hz
      */
     pulseFrequencyInHz: {
-        '1M': 1 | 2 | 3;
-        '3M': 1 | 2 | 3;
+        '1M': 0 | 1 | 2 | 3;
+        '3M': 0 | 1 | 2 | 3;
     };
     /**
      * Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:50/3=1:10
@@ -305,7 +305,7 @@ export type UltrasoundSnapshot = {
     /**
      * Actual_Ultrasound_Pulse_Frequency: 0=10Hz/1=20Hz/2=50Hz/3=100Hz
      */
-    pulseFrequencyInHz: 1 | 2 | 3;
+    pulseFrequencyInHz: 0 | 1 | 2 | 3;
     /**
      * Actual_Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:50/3=1:10
      */
