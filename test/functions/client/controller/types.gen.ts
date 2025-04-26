@@ -118,7 +118,7 @@ export type UltrasoundSetting = {
     /**
      * Ultrasound_Scheme_Enable
      */
-    scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '4mPulse';
+    scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '3mPulse';
     intensityLimit: {
         /**
          * Ultrasound_Intensity_Limit_1MC
@@ -170,20 +170,22 @@ export type TensSetting = {
     heatLimit: BiChannelLimit;
 };
 
-export type ProSetting = {
+/**
+ * Treatment_Plan_Enable
+ */
+export type ProPlanSetting = {
     /**
-     * Treatment_Plan_Enable
+     * TENS
      */
-    plan: {
-        /**
-         * TENS
-         */
-        tens: 0 | 10 | 20 | 30;
-        /**
-         * Ultrasound
-         */
-        ultrasound: 0 | 10 | 20 | 30;
-    };
+    tens: 0 | 10 | 20 | 30;
+    /**
+     * Ultrasound
+     */
+    ultrasound: 0 | 10 | 20 | 30;
+};
+
+export type ProSetting = {
+    plan: ProPlanSetting;
     ultrasoundSetting: UltrasoundSetting;
     tensSetting: TensSetting;
 };
@@ -295,7 +297,7 @@ export type UltrasoundSnapshot = {
     /**
      * Ultrasound_Scheme_Selected
      */
-    scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '4mPulse';
+    scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '3mPulse';
     /**
      * Actual_Ultrasound_Intensity
      */
@@ -329,20 +331,22 @@ export type TensSnapshot = {
     time: SnapshotTime;
 };
 
-export type ProSnapshot = {
+/**
+ * Treatment_Plan_Selected
+ */
+export type ProPlanSnapshot = {
     /**
-     * Treatment_Plan_Selected
+     * TENS
      */
-    plan: {
-        /**
-         * TENS
-         */
-        tens: 0 | 10 | 20 | 30;
-        /**
-         * Ultrasound
-         */
-        ultrasound: 0 | 10 | 20 | 30;
-    };
+    tens: 0 | 10 | 20 | 30;
+    /**
+     * Ultrasound
+     */
+    ultrasound: 0 | 10 | 20 | 30;
+};
+
+export type ProSnapshot = {
+    plan: ProPlanSnapshot;
     ultrasoundSnapshot: UltrasoundSnapshot;
     tensSnapshot: TensSnapshot;
 };
