@@ -161,7 +161,14 @@ export type TensSetting = {
     /**
      * TENS_Waveform_Enable
      */
-    waveform: 1 | 2 | 3 | 4 | 5 | 6;
+    waveform: {
+        wf1: boolean;
+        wf2: boolean;
+        wf3: boolean;
+        wf4: boolean;
+        wf5: boolean;
+        wf6: boolean;
+    };
     /**
      * TENS_Channel_Enable
      */
@@ -326,7 +333,7 @@ export type TensSnapshot = {
     /**
      * Actual_TENS_Waveform
      */
-    waveform: number;
+    waveform: 'wf1' | 'wf2' | 'wf3' | 'wf4' | 'wf5' | 'wf6';
     intensity: Channel;
     temperature: BiChannel;
     time: SnapshotTime;
