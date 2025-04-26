@@ -9,11 +9,19 @@ export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
         },
         ultrasoundSetting: {
             scheme: '1mContinuous',
-            intensityLimit: 1.0,
-            pulseFrequencyInHz: 10,
+            intensityLimit: {
+                '1MC': 1.0,
+                '3MC': 1.0,
+                '1MP': 1.0,
+                '3MP': 1.0,
+            },
+            pulseFrequencyInHz: {
+                '1M': 1,
+                '3M': 1,
+            },
             pulseDutyRatio: {
-                numerator: 10,
-                denominator: 10,
+                '1M': '1:1',
+                '3M': '1:1',
             },
             temperatureThreshold: 3,
         },
@@ -25,6 +33,10 @@ export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
                 ch2: 0,
                 ch3: 0,
                 ch4: 0,
+            },
+            heatLimit: {
+                ch1: 0,
+                ch2: 0,
             },
         },
     },
@@ -39,14 +51,11 @@ export function createTreatmentSnapshot(treatmentPlan: client.BaseJob['treatment
                 ultrasound: treatmentPlan.detail.plan.ultrasound,
             },
             ultrasoundSnapshot: {
-                pulseFrequencyInHz: treatmentPlan.detail.ultrasoundSetting.pulseFrequencyInHz,
-                pulseDutyRatio: {
-                    numerator: treatmentPlan.detail.ultrasoundSetting.pulseDutyRatio.numerator ?? 0,
-                    denominator: treatmentPlan.detail.ultrasoundSetting.pulseDutyRatio.denominator ?? 1,
-                },
+                pulseFrequencyInHz: 1,
+                pulseDutyRatio: '1:1',
                 temperature: treatmentPlan.detail.ultrasoundSetting.temperatureThreshold,
                 scheme: treatmentPlan.detail.ultrasoundSetting.scheme,
-                intensity: treatmentPlan.detail.ultrasoundSetting.intensityLimit,
+                intensity: 1,
                 time: {
                     startedAt: new Date().toISOString(),
                     timeRemain: {
@@ -65,8 +74,6 @@ export function createTreatmentSnapshot(treatmentPlan: client.BaseJob['treatment
                 temperature: {
                     ch1: 0,
                     ch2: 0,
-                    ch3: 0,
-                    ch4: 0,
                 },
                 waveform: treatmentPlan.detail.tensSetting.waveform,
                 channel: treatmentPlan.detail.tensSetting.channel,

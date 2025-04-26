@@ -39,11 +39,64 @@ export type Location = BaseLocation & {
     }>;
 };
 
-export type Channel = {
+export type ChannelLimit = {
+    /**
+     * TENS_CH1_Intensity_Limit
+     */
     ch1: number;
+    /**
+     * TENS_CH2_Intensity_Limit
+     */
     ch2: number;
+    /**
+     * TENS_CH3_Intensity_Limit
+     */
     ch3: number;
+    /**
+     * TENS_CH4_Intensity_Limit
+     */
     ch4: number;
+};
+
+export type Channel = {
+    /**
+     * Actual_TENS_CH1_Intensity
+     */
+    ch1: number;
+    /**
+     * Actual_TENS_CH2_Intensity
+     */
+    ch2: number;
+    /**
+     * Actual_TENS_CH3_Intensity
+     */
+    ch3: number;
+    /**
+     * Actual_TENS_CH4_Intensity
+     */
+    ch4: number;
+};
+
+export type BiChannelLimit = {
+    /**
+     * TENS_CH1_Heat_Limit: 0:L/1:M/2:H
+     */
+    ch1: 0 | 1 | 2;
+    /**
+     * TENS_CH2_Heat_Limit: 0:L/1:M/2:H
+     */
+    ch2: 0 | 1 | 2;
+};
+
+export type BiChannel = {
+    /**
+     * Actual_TENS_CH1_Temperature: 0=1/1=M/2=H
+     */
+    ch1: 0 | 1 | 2;
+    /**
+     * Actual_TENS_CH2_Temperature: 0=1/1=M/2=H
+     */
+    ch2: 0 | 1 | 2;
 };
 
 export type SnapshotTime = {
@@ -62,26 +115,74 @@ export type Acknowledgement = {
 };
 
 export type UltrasoundSetting = {
+    /**
+     * Ultrasound_Scheme_Enable
+     */
     scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '4mPulse';
-    intensityLimit: number;
-    pulseFrequencyInHz: number;
-    pulseDutyRatio: {
-        numerator?: number;
-        denominator?: number;
+    intensityLimit: {
+        /**
+         * Ultrasound_Intensity_Limit_1MC
+         */
+        '1MC': number;
+        /**
+         * Ultrasound_Intensity_Limit_3MC
+         */
+        '3MC': number;
+        /**
+         * Ultrasound_Intensity_Limit_1MP
+         */
+        '1MP': number;
+        /**
+         * Ultrasound_Intensity_Limit_3MP
+         */
+        '3MP': number;
     };
+    /**
+     * Ultrasound_Pulse_Frequency
+     */
+    pulseFrequencyInHz: {
+        '1M': 1 | 2 | 3;
+        '3M': 1 | 2 | 3;
+    };
+    /**
+     * Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:50/3=1:10
+     */
+    pulseDutyRatio: {
+        '1M': '1:1' | '1:2' | '1:50' | '1:10';
+        '3M': '1:1' | '1:2' | '1:50' | '1:10';
+    };
+    /**
+     * Ultrasound_Temperature_Threshold
+     */
     temperatureThreshold: number;
 };
 
 export type TensSetting = {
-    waveform: number;
-    channel: number;
-    intensitylimit: Channel;
+    /**
+     * TENS_Waveform_Enable
+     */
+    waveform: 1 | 2 | 3 | 4 | 5 | 6;
+    /**
+     * TENS_Channel_Enable
+     */
+    channel: 1 | 2 | 3 | 4;
+    intensitylimit: ChannelLimit;
+    heatLimit: BiChannelLimit;
 };
 
 export type ProSetting = {
+    /**
+     * Treatment_Plan_Enable
+     */
     plan: {
-        tens?: number;
-        ultrasound?: number;
+        /**
+         * TENS
+         */
+        tens: 0 | 10 | 20 | 30;
+        /**
+         * Ultrasound
+         */
+        ultrasound: 0 | 10 | 20 | 30;
     };
     ultrasoundSetting: UltrasoundSetting;
     tensSetting: TensSetting;
@@ -191,29 +292,56 @@ export type CommandWithStatus = Command & {
 };
 
 export type UltrasoundSnapshot = {
+    /**
+     * Ultrasound_Scheme_Selected
+     */
     scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '4mPulse';
+    /**
+     * Actual_Ultrasound_Intensity
+     */
     intensity: number;
-    pulseFrequencyInHz: number;
-    pulseDutyRatio: {
-        numerator: number;
-        denominator: number;
-    };
+    /**
+     * Actual_Ultrasound_Pulse_Frequency: 0=10Hz/1=20Hz/2=50Hz/3=100Hz
+     */
+    pulseFrequencyInHz: 1 | 2 | 3;
+    /**
+     * Actual_Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:50/3=1:10
+     */
+    pulseDutyRatio: '1:1' | '1:2' | '1:50' | '1:10';
+    /**
+     * Actual_Ultrasound_Temperature: 数据范围 = 0-119; 0=-20°C; 119=99°C
+     */
     temperature: number;
     time: SnapshotTime;
 };
 
 export type TensSnapshot = {
+    /**
+     * Actual_TENS_Waveform
+     */
     waveform: number;
+    /**
+     * Actual_TENS_Channel_Selected
+     */
     channel: number;
     intensity: Channel;
-    temperature: Channel;
+    temperature: BiChannel;
     time: SnapshotTime;
 };
 
 export type ProSnapshot = {
+    /**
+     * Treatment_Plan_Selected
+     */
     plan: {
-        tens?: number;
-        ultrasound?: number;
+        /**
+         * TENS
+         */
+        tens: 0 | 10 | 20 | 30;
+        /**
+         * Ultrasound
+         */
+        ultrasound: 0 | 10 | 20 | 30;
     };
     ultrasoundSnapshot: UltrasoundSnapshot;
     tensSnapshot: TensSnapshot;
