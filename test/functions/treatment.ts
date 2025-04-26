@@ -27,7 +27,12 @@ export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
         },
         tensSetting: {
             waveform: 1,
-            channel: 1,
+            channel: {
+                ch1: true,
+                ch2: true,
+                ch3: true,
+                ch4: true,
+            },
             intensitylimit: {
                 ch1: 0,
                 ch2: 0,
@@ -76,7 +81,6 @@ export function createTreatmentSnapshot(treatmentPlan: client.BaseJob['treatment
                     ch2: 0,
                 },
                 waveform: treatmentPlan.detail.tensSetting.waveform,
-                channel: treatmentPlan.detail.tensSetting.channel,
                 time: {
                     startedAt: new Date().toISOString(),
                     timeRemain: {

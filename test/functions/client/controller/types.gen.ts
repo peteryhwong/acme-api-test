@@ -165,7 +165,12 @@ export type TensSetting = {
     /**
      * TENS_Channel_Enable
      */
-    channel: 1 | 2 | 3 | 4;
+    channel: {
+        ch1: boolean;
+        ch2: boolean;
+        ch3: boolean;
+        ch4: boolean;
+    };
     intensitylimit: ChannelLimit;
     heatLimit: BiChannelLimit;
 };
@@ -322,10 +327,6 @@ export type TensSnapshot = {
      * Actual_TENS_Waveform
      */
     waveform: number;
-    /**
-     * Actual_TENS_Channel_Selected
-     */
-    channel: number;
     intensity: Channel;
     temperature: BiChannel;
     time: SnapshotTime;
