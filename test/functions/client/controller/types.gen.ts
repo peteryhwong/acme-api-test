@@ -145,11 +145,11 @@ export type UltrasoundSetting = {
         threeM: 0 | 1 | 2 | 3;
     };
     /**
-     * Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:50/3=1:10
+     * Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:5/3=1:10
      */
     pulseDutyRatio: {
-        oneM: '1:1' | '1:2' | '1:50' | '1:10';
-        threeM: '1:1' | '1:2' | '1:50' | '1:10';
+        oneM: '1:1' | '1:2' | '1:5' | '1:10';
+        threeM: '1:1' | '1:2' | '1:5' | '1:10';
     };
     /**
      * Ultrasound_Temperature_Threshold
@@ -319,9 +319,9 @@ export type UltrasoundSnapshot = {
      */
     pulseFrequencyInHz: 0 | 1 | 2 | 3;
     /**
-     * Actual_Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:50/3=1:10
+     * Actual_Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:5/3=1:10
      */
-    pulseDutyRatio: '1:1' | '1:2' | '1:50' | '1:10';
+    pulseDutyRatio: '1:1' | '1:2' | '1:5' | '1:10';
     /**
      * Actual_Ultrasound_Temperature: 数据范围 = 0-119; 0=-20°C; 119=99°C
      */
