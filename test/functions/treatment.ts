@@ -10,18 +10,18 @@ export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
         ultrasoundSetting: {
             scheme: '1mContinuous',
             intensityLimit: {
-                '1MC': 1.0,
-                '3MC': 1.0,
-                '1MP': 1.0,
-                '3MP': 1.0,
-            },
-            pulseFrequencyInHz: {
-                '1M': 1,
-                '3M': 1,
+                oneMC: 1.0,
+                threeMC: 1.0,
+                oneMP: 1.0,
+                threeMP: 1.0,
             },
             pulseDutyRatio: {
-                '1M': '1:1',
-                '3M': '1:1',
+                oneM: '1:1',
+                threeM: '1:1',
+            },
+            pulseFrequencyInHz: {
+                oneM: 1,
+                threeM: 1,
             },
             temperatureThreshold: 3,
         },

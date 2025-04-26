@@ -123,33 +123,33 @@ export type UltrasoundSetting = {
         /**
          * Ultrasound_Intensity_Limit_1MC
          */
-        '1MC': number;
+        oneMC: number;
         /**
          * Ultrasound_Intensity_Limit_3MC
          */
-        '3MC': number;
+        threeMC: number;
         /**
          * Ultrasound_Intensity_Limit_1MP
          */
-        '1MP': number;
+        oneMP: number;
         /**
          * Ultrasound_Intensity_Limit_3MP
          */
-        '3MP': number;
+        threeMP: number;
     };
     /**
      * Ultrasound_Pulse_Frequency: 0=10Hz/1=20Hz/2=50Hz/3=100Hz
      */
     pulseFrequencyInHz: {
-        '1M': 0 | 1 | 2 | 3;
-        '3M': 0 | 1 | 2 | 3;
+        oneM: 0 | 1 | 2 | 3;
+        threeM: 0 | 1 | 2 | 3;
     };
     /**
      * Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:50/3=1:10
      */
     pulseDutyRatio: {
-        '1M': '1:1' | '1:2' | '1:50' | '1:10';
-        '3M': '1:1' | '1:2' | '1:50' | '1:10';
+        oneM: '1:1' | '1:2' | '1:50' | '1:10';
+        threeM: '1:1' | '1:2' | '1:50' | '1:10';
     };
     /**
      * Ultrasound_Temperature_Threshold
