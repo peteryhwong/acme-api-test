@@ -4,26 +4,33 @@ export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
     type: 'pro',
     detail: {
         plan: {
-            tens: 0,
-            ultrasound: 0,
+            ultrasound0Tens30: true,
+            ultrasound10Tens20: true,
+            ultrasound20Tens10: true,
+            ultrasound30Tens0: true,
         },
         ultrasoundSetting: {
-            scheme: '1mContinuous',
+            scheme: {
+                oneMContinuous: true,
+                oneMPulse: true,
+                threeMContinuous: true,
+                threeMPulse: true,
+            },
             intensityLimit: {
-                oneMC: 1.0,
-                threeMC: 1.0,
-                oneMP: 1.0,
-                threeMP: 1.0,
+                oneMC: 0.1,
+                threeMC: 0.1,
+                oneMP: 0.1,
+                threeMP: 0.1,
             },
             pulseDutyRatio: {
-                oneM: '1:1',
-                threeM: '1:1',
+                oneM: 0,
+                threeM: 0,
             },
             pulseFrequencyInHz: {
                 oneM: 1,
                 threeM: 1,
             },
-            temperatureThreshold: 3,
+            temperatureThreshold: 2,
         },
         tensSetting: {
             waveform: {
@@ -58,15 +65,12 @@ export function createTreatmentSnapshot(treatmentPlan: client.BaseJob['treatment
     const snapshot: client.TreatmentSnapshot = {
         type: 'pro',
         detail: {
-            plan: {
-                tens: treatmentPlan.detail.plan.tens,
-                ultrasound: treatmentPlan.detail.plan.ultrasound,
-            },
+            plan: 'ultrasound0Tens30',
             ultrasoundSnapshot: {
                 pulseFrequencyInHz: 1,
-                pulseDutyRatio: '1:1',
+                pulseDutyRatio: 0,
                 temperature: treatmentPlan.detail.ultrasoundSetting.temperatureThreshold,
-                scheme: treatmentPlan.detail.ultrasoundSetting.scheme,
+                scheme: 'oneMContinuous',
                 intensity: 1,
                 time: {
                     startedAt: new Date().toISOString(),

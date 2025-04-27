@@ -118,7 +118,12 @@ export type UltrasoundSetting = {
     /**
      * Ultrasound_Scheme_Enable
      */
-    scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '3mPulse';
+    scheme: {
+        oneMContinuous: boolean;
+        threeMContinuous: boolean;
+        oneMPulse: boolean;
+        threeMPulse: boolean;
+    };
     intensityLimit: {
         /**
          * Ultrasound_Intensity_Limit_1MC
@@ -148,13 +153,13 @@ export type UltrasoundSetting = {
      * Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:5/3=1:10
      */
     pulseDutyRatio: {
-        oneM: '1:1' | '1:2' | '1:5' | '1:10';
-        threeM: '1:1' | '1:2' | '1:5' | '1:10';
+        oneM: 0 | 1 | 2 | 3;
+        threeM: 0 | 1 | 2 | 3;
     };
     /**
      * Ultrasound_Temperature_Threshold
      */
-    temperatureThreshold: number;
+    temperatureThreshold: 0 | 1 | 2;
 };
 
 export type TensSetting = {
@@ -186,14 +191,10 @@ export type TensSetting = {
  * Treatment_Plan_Enable
  */
 export type ProPlanSetting = {
-    /**
-     * TENS
-     */
-    tens: 0 | 10 | 20 | 30;
-    /**
-     * Ultrasound
-     */
-    ultrasound: 0 | 10 | 20 | 30;
+    ultrasound30Tens0: boolean;
+    ultrasound20Tens10: boolean;
+    ultrasound10Tens20: boolean;
+    ultrasound0Tens30: boolean;
 };
 
 export type ProSetting = {
@@ -309,7 +310,7 @@ export type UltrasoundSnapshot = {
     /**
      * Ultrasound_Scheme_Selected
      */
-    scheme: '1mContinuous' | '3mContinuous' | '1mPulse' | '3mPulse';
+    scheme: 'oneMContinuous' | 'threeMContinuous' | 'oneMPulse' | 'threeMPulse';
     /**
      * Actual_Ultrasound_Intensity
      */
@@ -321,7 +322,7 @@ export type UltrasoundSnapshot = {
     /**
      * Actual_Ultrasound_Pulse_Duty_Ratio: 0=1:1/1=1:2/2=1:5/3=1:10
      */
-    pulseDutyRatio: '1:1' | '1:2' | '1:5' | '1:10';
+    pulseDutyRatio: 0 | 1 | 2 | 3;
     /**
      * Actual_Ultrasound_Temperature: 数据范围 = 0-119; 0=-20°C; 119=99°C
      */
@@ -342,16 +343,7 @@ export type TensSnapshot = {
 /**
  * Treatment_Plan_Selected
  */
-export type ProPlanSnapshot = {
-    /**
-     * TENS
-     */
-    tens: 0 | 10 | 20 | 30;
-    /**
-     * Ultrasound
-     */
-    ultrasound: 0 | 10 | 20 | 30;
-};
+export type ProPlanSnapshot = 'ultrasound30Tens0' | 'ultrasound20Tens10' | 'ultrasound10Tens20' | 'ultrasound0Tens30';
 
 export type ProSnapshot = {
     plan: ProPlanSnapshot;
