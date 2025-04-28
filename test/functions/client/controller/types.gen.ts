@@ -327,7 +327,7 @@ export type UltrasoundSnapshot = {
      * Actual_Ultrasound_Temperature: 数据范围 = 0-119; 0=-20°C; 119=99°C
      */
     temperature: number;
-    time: SnapshotTime;
+    time?: SnapshotTime;
 };
 
 export type TensSnapshot = {
@@ -337,7 +337,7 @@ export type TensSnapshot = {
     waveform: 'wf1' | 'wf2' | 'wf3' | 'wf4' | 'wf5' | 'wf6';
     intensity: Channel;
     temperature: BiChannel;
-    time: SnapshotTime;
+    time?: SnapshotTime;
 };
 
 /**

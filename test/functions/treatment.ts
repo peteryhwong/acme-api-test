@@ -17,10 +17,10 @@ export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
                 threeMPulse: true,
             },
             intensityLimit: {
-                oneMC: 0.1,
-                threeMC: 0.1,
-                oneMP: 0.1,
-                threeMP: 0.1,
+                oneMC: 10,
+                threeMC: 10,
+                oneMP: 10,
+                threeMP: 10,
             },
             pulseDutyRatio: {
                 oneM: 0,
@@ -71,7 +71,7 @@ export function createTreatmentSnapshot(treatmentPlan: client.BaseJob['treatment
                 pulseDutyRatio: 0,
                 temperature: treatmentPlan.detail.ultrasoundSetting.temperatureThreshold,
                 scheme: 'oneMContinuous',
-                intensity: 1,
+                intensity: 9,
                 time: {
                     startedAt: new Date().toISOString(),
                     timeRemain: {
