@@ -126,19 +126,19 @@ export type UltrasoundSetting = {
     };
     intensityLimit: {
         /**
-         * Ultrasound_Intensity_Limit_1MC
+         * Ultrasound_Intensity_Limit_1M_C
          */
         oneMC: number;
         /**
-         * Ultrasound_Intensity_Limit_3MC
+         * Ultrasound_Intensity_Limit_3M_C
          */
         threeMC: number;
         /**
-         * Ultrasound_Intensity_Limit_1MP
+         * Ultrasound_Intensity_Limit_1M_P
          */
         oneMP: number;
         /**
-         * Ultrasound_Intensity_Limit_3MP
+         * Ultrasound_Intensity_Limit_3M_P
          */
         threeMP: number;
     };
@@ -234,6 +234,7 @@ export type BaseJobWithJobIdAndAssigneeAndStatus = BaseJobWithJobId & {
 };
 
 export type BaseJobWithJobIdAndStatusAndAssigneeAndDeviceId = BaseJobWithJobIdAndAssigneeAndStatus & {
+    datetime?: string;
     deviceId: string;
 };
 
@@ -300,6 +301,7 @@ export type BaseCommand = {
 export type Command = BaseCommand & {
     id: string;
     createDate: string;
+    type: 1 | 2 | 3;
 };
 
 export type CommandWithStatus = Command & {
@@ -406,6 +408,22 @@ export type Device = BaseDevice & {
 
 export type DeviceRequest = BaseDevice & {
     passcode: string;
+};
+
+export type EventReport = JobHistory | ErrorHistory | Acknowledgement;
+
+export type Event = {
+    eventId: string;
+    datetime: string;
+    type: 'heartbeat' | 'devicereport' | 'healthcheck' | 'ping';
+    detail: {
+        deviceId: string;
+        report: DeviceReport;
+    } | {
+        [key: string]: unknown;
+    };
+    status: string;
+    deviceId?: string;
 };
 
 export type ValidateAssignee = {
@@ -809,6 +827,33 @@ export type GetDeviceByIdResponses = {
 };
 
 export type GetDeviceByIdResponse = GetDeviceByIdResponses[keyof GetDeviceByIdResponses];
+
+export type ListDeviceEventsData = {
+    body?: never;
+    path: {
+        deviceId: string;
+    };
+    query?: never;
+    url: '/v1.0/device/{deviceId}/event';
+};
+
+export type ListDeviceEventsErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type ListDeviceEventsError = ListDeviceEventsErrors[keyof ListDeviceEventsErrors];
+
+export type ListDeviceEventsResponses = {
+    200: {
+        event: Array<Event>;
+    };
+};
+
+export type ListDeviceEventsResponse = ListDeviceEventsResponses[keyof ListDeviceEventsResponses];
 
 export type GetJobsData = {
     body?: never;
