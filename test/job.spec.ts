@@ -67,7 +67,50 @@ async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assign
     return jobId;
 }
 
+describe(`Test with an emulated device`, () => {
+    if (process.env.EMULATOR !== 'true') {
+        it.skip('Skipping tests because EMULATOR is not true', () => {});
+        return;
+    }
+
+    it('Add a job to device', async () => {
+        console.log(`Login as platform user`);
+        const jwtToken = await loginAsPlatformUser(checkAndGetEnvVariable(PLATFORM_USERNAME), checkAndGetEnvVariable(PLATFORM_PASSWORD));
+        console.log(`Got token ${jwtToken}`);
+
+        const deviceCode = checkAndGetEnvVariable(DEVICE);
+        const assigneeUsername = checkAndGetEnvVariable(ASSIGNEE);
+
+        console.log(`Prepare job content`);
+        const { deviceId } = await prepareJobContent({
+            jwtToken,
+            deviceCode,
+            assigneeUsername,
+            userNumber: checkAndGetEnvVariable(USER),
+        });
+
+        console.log(`Send ping to device`);
+        const pingId = await sendPingToDevice({
+            jwtToken,
+            deviceId,
+        });
+
+        console.log(`Wait and check acknowledged`);
+        await checkApiWithRetries(
+            () => getDeviceCommands(jwtToken, deviceId),
+            5,
+            30,
+            deviceCommands => deviceCommands?.some(command => command.id === pingId && command.status === 'acknowledged') === true,
+        );
+    }, 60000);
+});
+
 describe(`Add a job to device and have the device report back status to completion`, () => {
+    if (process.env.EMULATOR === 'true') {
+        it.skip('Skipping tests because EMULATOR is true', () => {});
+        return;
+    }
+
     it('Add a job to device and have the device report back status to completion', async () => {
         console.log(`Login as platform user`);
         const jwtToken = await loginAsPlatformUser(checkAndGetEnvVariable(PLATFORM_USERNAME), checkAndGetEnvVariable(PLATFORM_PASSWORD));

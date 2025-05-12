@@ -111,6 +111,7 @@ export type Acknowledgement = {
     type: 'acknowledgement';
     detail: {
         commandId: Array<string>;
+        version?: string;
     };
 };
 
@@ -205,7 +206,7 @@ export type ProSetting = {
 
 export type BaseJob = {
     treatmentPlan: {
-        type: 'pro';
+        type: 'pro' | 'pronew';
         detail: ProSetting;
     };
 };
@@ -294,14 +295,37 @@ export type Ping = {
     command: 'ping';
 };
 
+export type BaseMasterProgram = {
+    version: string;
+};
+
+export type BaseMasterProgramWithDetail = {
+    version: string;
+    datetime: string;
+};
+
+export type MasterProgramUpgradeDetail = {
+    VersionCode: string;
+    VersionName: string;
+    ModifyContent: string;
+    DownloadUrl: string;
+    ApkSize: string;
+    ApkMd5: string;
+};
+
+export type MasterProgramUpgrade = {
+    command: 'masterprogramupgrade';
+    detail: MasterProgramUpgradeDetail;
+};
+
 export type BaseCommand = {
-    command: JobDetail | JobAction | Ping;
+    command: JobDetail | JobAction | Ping | MasterProgramUpgrade;
 };
 
 export type Command = BaseCommand & {
     id: string;
     createDate: string;
-    type: 1 | 2 | 3;
+    type: 1 | 2 | 3 | 4;
 };
 
 export type CommandWithStatus = Command & {
@@ -354,7 +378,7 @@ export type ProSnapshot = {
 };
 
 export type TreatmentSnapshot = {
-    type: 'pro';
+    type: 'pro' | 'pronew';
     detail: ProSnapshot;
 };
 
@@ -855,6 +879,31 @@ export type ListDeviceEventsResponses = {
 
 export type ListDeviceEventsResponse = ListDeviceEventsResponses[keyof ListDeviceEventsResponses];
 
+export type UpdateDeviceMasterProgramData = {
+    body?: BaseMasterProgram;
+    path: {
+        deviceId: string;
+    };
+    query?: never;
+    url: '/v1.0/device/{deviceId}/masterprogram';
+};
+
+export type UpdateDeviceMasterProgramErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type UpdateDeviceMasterProgramError = UpdateDeviceMasterProgramErrors[keyof UpdateDeviceMasterProgramErrors];
+
+export type UpdateDeviceMasterProgramResponses = {
+    200: BaseMasterProgram;
+};
+
+export type UpdateDeviceMasterProgramResponse = UpdateDeviceMasterProgramResponses[keyof UpdateDeviceMasterProgramResponses];
+
 export type GetJobsData = {
     body?: never;
     path?: never;
@@ -1106,6 +1155,34 @@ export type DeleteLocationResponses = {
 };
 
 export type DeleteLocationResponse = DeleteLocationResponses[keyof DeleteLocationResponses];
+
+export type GetMasterProgramsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1.0/masterprogram';
+};
+
+export type GetMasterProgramsErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type GetMasterProgramsError = GetMasterProgramsErrors[keyof GetMasterProgramsErrors];
+
+export type GetMasterProgramsResponses = {
+    /**
+     * OK
+     */
+    200: {
+        masterprogram: Array<BaseMasterProgramWithDetail>;
+    };
+};
+
+export type GetMasterProgramsResponse = GetMasterProgramsResponses[keyof GetMasterProgramsResponses];
 
 export type CreateDeviceReportData = {
     body?: DeviceReport;
