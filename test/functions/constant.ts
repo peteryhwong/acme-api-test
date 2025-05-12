@@ -2,7 +2,17 @@ import * as localJson from '../../resource/local.json';
 
 export const ENV = process.env;
 
-export const LOCAL = localJson;
+export const LOCAL: typeof localJson = {
+    ...localJson,
+    controller: {
+        ...localJson.controller,
+        baseUrl: process.env.CONTROLLER_BASE_URL ?? localJson.controller.baseUrl,
+    },
+    user: {
+       ...localJson.user,
+        baseUrl: process.env.USER_BASE_URL?? localJson.user.baseUrl,
+    },
+};
 
 export const PLATFORM_USERNAME = ENV.PLATFORM_USERNAME;
 export const PLATFORM_PASSWORD = ENV.PLATFORM_PASSWORD;
