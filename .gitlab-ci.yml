@@ -10,7 +10,7 @@ build-job:
       git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ankh-local.com/master/general-01/ankh-k8s.git .ankh-k8s
       echo "Login to staging Docker registry"
       source .ankh-k8s/cicd/deploy/staging/docker.sh
-  image: nexus.ankh-local.com:5000/node-test-base:latest
+  image: nexus.ankh-local.com:5001/ankh/node-test-base:latest
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
