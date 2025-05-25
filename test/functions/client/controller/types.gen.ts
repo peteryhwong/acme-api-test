@@ -188,14 +188,48 @@ export type TensSetting = {
     heatLimit: BiChannelLimit;
 };
 
+export type ProNewTreatmentPlan = {
+    type: 'pronew';
+    plan: {
+        ultrasound: number;
+        tens: number;
+    };
+};
+
+export type TreatmentPlanUpdate = ProNewTreatmentPlan;
+
+export type TreatmentPlanHistory = TreatmentPlanUpdate & {
+    author: string;
+    updatedAt: string;
+};
+
+export type ProNewTreatmentPlanWithVersion = ProNewTreatmentPlan & {
+    version: string;
+};
+
+export type TreatmentPlanWithVersionAndName = ProNewTreatmentPlanWithVersion & {
+    name: string;
+    updatedAt: string;
+};
+
+export type TreatmentPlanWithVersionAndNameAndHistory = TreatmentPlanWithVersionAndName & {
+    history: Array<TreatmentPlanHistory>;
+};
+
 /**
  * Treatment_Plan_Enable
  */
 export type ProPlanSetting = {
-    ultrasound30Tens0: boolean;
-    ultrasound20Tens10: boolean;
-    ultrasound10Tens20: boolean;
-    ultrasound0Tens30: boolean;
+    preset: {
+        pronew001?: ProNewTreatmentPlanWithVersion;
+        pronew002?: ProNewTreatmentPlanWithVersion;
+        pronew003?: ProNewTreatmentPlanWithVersion;
+        pronew004?: ProNewTreatmentPlanWithVersion;
+        pronew005?: ProNewTreatmentPlanWithVersion;
+        pronew006?: ProNewTreatmentPlanWithVersion;
+        pronew007?: ProNewTreatmentPlanWithVersion;
+    };
+    custom: boolean;
 };
 
 export type ProSetting = {
@@ -369,10 +403,18 @@ export type TensSnapshot = {
 /**
  * Treatment_Plan_Selected
  */
-export type ProPlanSnapshot = 'ultrasound30Tens0' | 'ultrasound20Tens10' | 'ultrasound10Tens20' | 'ultrasound0Tens30';
+export type ProNewPlanSnapshot = {
+    tens: number;
+    ultrasound: number;
+};
+
+/**
+ * Treatment_Plan_Selected
+ */
+export type ProPlanSnapshot = 'ultrasound30Tens0' | 'ultrasound20Tens10' | 'ultrasound10Tens20' | 'ultrasound0Tens30' | 'ultrasoundXTensY';
 
 export type ProSnapshot = {
-    plan: ProPlanSnapshot;
+    plan: ProPlanSnapshot | ProNewPlanSnapshot;
     ultrasoundSnapshot: UltrasoundSnapshot;
     tensSnapshot: TensSnapshot;
 };
@@ -387,7 +429,7 @@ export type JobHistory = {
     jobId: string;
     detail: {
         assigneeUsername: string;
-        status: 'standby' | 'play' | 'frozen' | 'complete' | 'cancelled' | 'abnormal';
+        status: 'standby' | 'Standby' | 'play' | 'Play' | 'pause' | 'Pause' | 'frozen' | 'Frozen' | 'complete' | 'Complete' | 'cancelled' | 'Cancel' | 'cancel' | 'abnormal' | 'Abnormal';
         treatment: TreatmentSnapshot;
     };
 };
@@ -416,6 +458,7 @@ export type BaseDevice = {
 
 export type DeviceStatus = {
     status: 'online' | 'offline' | 'unknown';
+    masterProgramVersion?: string;
 };
 
 export type DeviceHistory = {
@@ -427,6 +470,7 @@ export type Device = BaseDevice & {
     deviceId: string;
     passcode?: string;
     status: string;
+    masterProgramVersion?: string;
     deviceHistory: Array<DeviceHistory>;
 };
 
@@ -496,6 +540,11 @@ export type CommandStatus = Array<'pending' | 'acknowledged'>;
  * Include deleted
  */
 export type IncludeDeleted = boolean;
+
+/**
+ * Force command
+ */
+export type ForceCommand = boolean;
 
 export type GetCommandsWithKeyData = {
     body?: never;
@@ -990,7 +1039,12 @@ export type UpdateJobStatusData = {
     path: {
         jobId: string;
     };
-    query?: never;
+    query?: {
+        /**
+         * Force command
+         */
+        forceCommand?: boolean;
+    };
     url: '/v1.0/job/{jobId}/status';
 };
 
@@ -1193,6 +1247,15 @@ export type CreateDeviceReportData = {
     url: '/v1.0/device/{deviceId}/report';
 };
 
+export type CreateDeviceReportErrors = {
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type CreateDeviceReportError = CreateDeviceReportErrors[keyof CreateDeviceReportErrors];
+
 export type CreateDeviceReportResponses = {
     201: {
         reportId?: string;
@@ -1200,6 +1263,78 @@ export type CreateDeviceReportResponses = {
 };
 
 export type CreateDeviceReportResponse = CreateDeviceReportResponses[keyof CreateDeviceReportResponses];
+
+export type GetTreatmentPlanData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1.0/treatmentplan';
+};
+
+export type GetTreatmentPlanErrors = {
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type GetTreatmentPlanError = GetTreatmentPlanErrors[keyof GetTreatmentPlanErrors];
+
+export type GetTreatmentPlanResponses = {
+    200: {
+        treatmentplan?: Array<TreatmentPlanWithVersionAndName>;
+    };
+};
+
+export type GetTreatmentPlanResponse = GetTreatmentPlanResponses[keyof GetTreatmentPlanResponses];
+
+export type GetTreatmentPlanByNameData = {
+    body?: never;
+    path: {
+        name: string;
+    };
+    query?: never;
+    url: '/v1.0/treatmentplan/{name}';
+};
+
+export type GetTreatmentPlanByNameErrors = {
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type GetTreatmentPlanByNameError = GetTreatmentPlanByNameErrors[keyof GetTreatmentPlanByNameErrors];
+
+export type GetTreatmentPlanByNameResponses = {
+    200: TreatmentPlanWithVersionAndNameAndHistory;
+};
+
+export type GetTreatmentPlanByNameResponse = GetTreatmentPlanByNameResponses[keyof GetTreatmentPlanByNameResponses];
+
+export type UpdateTreatmentPlanData = {
+    body?: TreatmentPlanUpdate;
+    path: {
+        name: string;
+    };
+    query?: never;
+    url: '/v1.0/treatmentplan/{name}';
+};
+
+export type UpdateTreatmentPlanErrors = {
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type UpdateTreatmentPlanError = UpdateTreatmentPlanErrors[keyof UpdateTreatmentPlanErrors];
+
+export type UpdateTreatmentPlanResponses = {
+    200: TreatmentPlanWithVersionAndName;
+};
+
+export type UpdateTreatmentPlanResponse = UpdateTreatmentPlanResponses[keyof UpdateTreatmentPlanResponses];
 
 export type GetUsersData = {
     body?: never;
