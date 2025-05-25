@@ -9,8 +9,8 @@ export const LOCAL: typeof localJson = {
         baseUrl: process.env.CONTROLLER_BASE_URL ?? localJson.controller.baseUrl,
     },
     user: {
-       ...localJson.user,
-        baseUrl: process.env.USER_BASE_URL?? localJson.user.baseUrl,
+        ...localJson.user,
+        baseUrl: process.env.USER_BASE_URL ?? localJson.user.baseUrl,
     },
 };
 

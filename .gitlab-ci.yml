@@ -1,4 +1,4 @@
-image: gitlab.ankh-local.com:5000/ankh/node:22.14.0-alpine3.20
+image: nexus.ankh-local.com:5000/node:22.14.0-alpine3.20
 
 stages:
   - build

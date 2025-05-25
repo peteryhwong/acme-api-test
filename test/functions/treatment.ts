@@ -1,13 +1,36 @@
 import * as client from './client/controller';
 
 export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
-    type: 'pro',
+    type: 'pronew',
     detail: {
         plan: {
-            ultrasound0Tens30: true,
-            ultrasound10Tens20: true,
-            ultrasound20Tens10: true,
-            ultrasound30Tens0: true,
+            custom: true,
+            preset: {
+                pronew001: {
+                    type: 'pronew',
+                    plan: {
+                        tens: 10,
+                        ultrasound: 20,
+                    },
+                    version: '2',
+                },
+                pronew003: {
+                    type: 'pronew',
+                    plan: {
+                        tens: 20,
+                        ultrasound: 10,
+                    },
+                    version: '2',
+                },
+                pronew006: {
+                    type: 'pronew',
+                    plan: {
+                        tens: 0,
+                        ultrasound: 20,
+                    },
+                    version: '2',
+                },
+            },
         },
         ultrasoundSetting: {
             scheme: {
@@ -63,9 +86,12 @@ export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
 
 export function createTreatmentSnapshot(treatmentPlan: client.BaseJob['treatmentPlan'] = DEFAULT_TREATMENT_PLAN): client.TreatmentSnapshot {
     const snapshot: client.TreatmentSnapshot = {
-        type: 'pro',
+        type: 'pronew',
         detail: {
-            plan: 'ultrasound0Tens30',
+            plan: {
+                tens: 10,
+                ultrasound: 20,
+            },
             ultrasoundSnapshot: {
                 pulseFrequencyInHz: 1,
                 pulseDutyRatio: 0,
