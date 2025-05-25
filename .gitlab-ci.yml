@@ -3,14 +3,7 @@ stages:
   - build
 
 build-job:
-  before_script:
-    - |
-      echo "Checkout ankh-k8s"
-      git config --global http.sslVerify false
-      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ankh-local.com/master/general-01/ankh-k8s.git .ankh-k8s
-      echo "Login to staging Docker registry"
-      source .ankh-k8s/cicd/deploy/staging/docker.sh
-  image: nexus.ankh-local.com:5001/ankh/node-test-base:latest
+  image: node:22.14.0-alpine3.20
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
