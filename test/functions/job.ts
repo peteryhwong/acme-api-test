@@ -7,6 +7,21 @@ export async function createDeviceJob(
     opt: { deviceId: string; assigneeId: string; userId: string; treatmentPlan?: client.BaseJob['treatmentPlan']; preset?: client.ProNewPlanSetting['preset'] },
 ): Promise<string> {
     const { deviceId, assigneeId, userId, treatmentPlan, preset } = opt;
+    const job: client.BaseJobWithAssignee = {
+        assigneeId,
+        userId,
+        treatmentPlan: {
+            ...(treatmentPlan ?? DEFAULT_TREATMENT_PLAN),
+            detail: {
+                ...DEFAULT_TREATMENT_PLAN.detail,
+                plan: {
+                    ...DEFAULT_TREATMENT_PLAN.detail.plan,
+                    preset: preset ?? DEFAULT_TREATMENT_PLAN_PLAN.preset,
+                },
+            },
+        },
+    };
+    console.log(`Create job ${JSON.stringify(job)}`);
     const res = await client.createJob({
         baseURL: LOCAL.controller.baseUrl,
         path: {
@@ -15,20 +30,7 @@ export async function createDeviceJob(
         headers: {
             Authorization: `Bearer ${jwtToken}`,
         },
-        body: {
-            assigneeId,
-            userId,
-            treatmentPlan: {
-                ...(treatmentPlan ?? DEFAULT_TREATMENT_PLAN),
-                detail: {
-                    ...DEFAULT_TREATMENT_PLAN.detail,
-                    plan: {
-                        ...DEFAULT_TREATMENT_PLAN.detail.plan,
-                        preset: preset ?? DEFAULT_TREATMENT_PLAN_PLAN.preset,
-                    },
-                },
-            },
-        },
+        body: job,
     });
     if (!res.data?.jobId) {
         throw new Error('create job failed');
