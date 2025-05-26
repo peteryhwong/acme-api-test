@@ -52,8 +52,8 @@ async function sendPingToDevice(req: { jwtToken: string; deviceId: string }) {
     return commandId;
 }
 
-async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string, preset: client.ProNewPlanSetting['preset']  }) {
-    const { jwtToken, deviceId, assigneeId, userId, preset, } = req;
+async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string; preset: client.ProNewPlanSetting['preset'] }) {
+    const { jwtToken, deviceId, assigneeId, userId, preset } = req;
 
     console.log(`Create job`);
     const jobId = await createDeviceJob(jwtToken, {
@@ -238,7 +238,7 @@ describe(`Add a job to device and have the device report back status to completi
 
         console.log(`Create report`);
         const report = await createDeviceReport({
-            deviceCode, 
+            deviceCode,
             jobHistory: {
                 detail: {
                     assigneeUsername,
@@ -247,7 +247,7 @@ describe(`Add a job to device and have the device report back status to completi
                 jobId,
                 type: 'interim',
             },
-            plan: presetToPlan(preset), 
+            plan: presetToPlan(preset),
         });
         console.log(`Created report ${report}`);
 
@@ -262,7 +262,7 @@ describe(`Add a job to device and have the device report back status to completi
 
         console.log(`Create completion report`);
         const completionReport = await createDeviceReport({
-            deviceCode, 
+            deviceCode,
             jobHistory: {
                 detail: {
                     assigneeUsername,
