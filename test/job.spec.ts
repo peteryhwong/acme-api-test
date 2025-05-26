@@ -127,13 +127,13 @@ async function createJobPreset(jwtToken: string): Promise<client.ProNewPlanSetti
         if (plan.plan.tens === 0 && plan.plan.ultrasound === 0) {
             const planSetup = DEFAULT_TREATMENT_PLAN_PLAN.preset[name].plan;
             await updateTreatmentPlan(jwtToken, name, planSetup);
+            plan = await getTreatmentPlanByName(jwtToken, name);
             if (plan.plan.tens !== planSetup.tens) {
                 throw new Error(`Plan ${name} tens is not ${planSetup.tens}`);
             }
             if (plan.plan.ultrasound !== planSetup.ultrasound) {
                 throw new Error(`Plan ${name} ultrasound is not ${planSetup.ultrasound}`);
             }
-            plan = await getTreatmentPlanByName(jwtToken, name);
         }
         preset[name] = {
             type: 'pronew',
