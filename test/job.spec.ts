@@ -1,10 +1,13 @@
 import { getAssigneeId } from './functions/assignee';
+import * as client from './functions/client/controller';
 import { acknowledge, getCommand, getDeviceCommands, sendPing } from './functions/command';
 import { ASSIGNEE, checkAndGetEnvVariable, DEVICE, PLATFORM_PASSWORD, PLATFORM_USERNAME, USER } from './functions/constant';
 import { getDeviceByCode } from './functions/device';
 import { createDeviceJob, getJob } from './functions/job';
 import { loginAsPlatformUser } from './functions/login';
 import { createDeviceReport } from './functions/report';
+import { DEFAULT_TREATMENT_PLAN_PLAN } from './functions/treatment';
+import { getAllTreatmentPlans, getTreatmentPlanByName, updateTreatmentPlan } from './functions/treatmentplan';
 import { getUserByUserNumber } from './functions/user';
 import { checkApiWithRetries } from './functions/wait';
 
@@ -49,14 +52,15 @@ async function sendPingToDevice(req: { jwtToken: string; deviceId: string }) {
     return commandId;
 }
 
-async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string }) {
-    const { jwtToken, deviceId, assigneeId, userId } = req;
+async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string, preset?: client.ProNewPlanSetting['preset'], }) {
+    const { jwtToken, deviceId, assigneeId, userId, preset, } = req;
 
     console.log(`Create job`);
     const jobId = await createDeviceJob(jwtToken, {
         deviceId,
         assigneeId,
         userId,
+        preset,
     });
     console.log(`Created job ${jobId}`);
 
@@ -104,6 +108,42 @@ describe(`Test with an emulated device`, () => {
         );
     }, 60000);
 });
+
+async function createJobPreset(jwtToken: string): Promise<client.ProNewPlanSetting['preset']> {
+    const plans = await getAllTreatmentPlans(jwtToken);
+    console.log(`Got ${plans.length} treatment plans`);
+    if (plans.length !== 8) {
+        throw new Error(`Expected 8 treatment plans, got ${plans.length}`);
+    }
+
+    const preset: client.ProNewPlanSetting['preset'] = Object.assign({}, DEFAULT_TREATMENT_PLAN_PLAN.preset);
+    let name: keyof typeof DEFAULT_TREATMENT_PLAN_PLAN.preset;
+    for (name in DEFAULT_TREATMENT_PLAN_PLAN.preset) {
+        let plan = await getTreatmentPlanByName(jwtToken, name);
+        if (plan.plan.tens === 0 && plan.plan.ultrasound === 0) {
+            const planSetup = DEFAULT_TREATMENT_PLAN_PLAN.preset[name].plan;
+            await updateTreatmentPlan(jwtToken, name, planSetup);
+            if (plan.plan.tens !== planSetup.tens) {
+                throw new Error(`Plan ${name} tens is not ${planSetup.tens}`);
+            }
+            if (plan.plan.ultrasound!== planSetup.ultrasound) {
+                throw new Error(`Plan ${name} ultrasound is not ${planSetup.ultrasound}`);
+            }
+            plan = await getTreatmentPlanByName(jwtToken, name);
+        }
+        preset[name] = {
+            type: 'pronew',
+            plan: {
+                tens: plan.plan.tens,
+                ultrasound: plan.plan.ultrasound,
+            },
+            version: plan.version.toString(),
+            customizable: false,
+            enabled: true,
+        };
+    }
+    return preset;
+}
 
 describe(`Add a job to device and have the device report back status to completion`, () => {
     if (process.env.EMULATOR === 'true') {

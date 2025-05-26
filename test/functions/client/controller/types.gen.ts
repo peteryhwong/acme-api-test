@@ -216,24 +216,39 @@ export type TreatmentPlanWithVersionAndNameAndHistory = TreatmentPlanWithVersion
     history: Array<TreatmentPlanHistory>;
 };
 
+export type CustomizableProNewTreatmentPlanWithVersion = ProNewTreatmentPlanWithVersion & {
+    customizable: boolean;
+    enabled: boolean;
+};
+
+/**
+ * Treatment_Plan_Enable
+ */
+export type ProNewPlanSetting = {
+    preset: {
+        pronew001: CustomizableProNewTreatmentPlanWithVersion;
+        pronew002: CustomizableProNewTreatmentPlanWithVersion;
+        pronew003: CustomizableProNewTreatmentPlanWithVersion;
+        pronew004: CustomizableProNewTreatmentPlanWithVersion;
+        pronew005: CustomizableProNewTreatmentPlanWithVersion;
+        pronew006: CustomizableProNewTreatmentPlanWithVersion;
+        pronew007: CustomizableProNewTreatmentPlanWithVersion;
+        pronew008: CustomizableProNewTreatmentPlanWithVersion;
+    };
+};
+
 /**
  * Treatment_Plan_Enable
  */
 export type ProPlanSetting = {
-    preset: {
-        pronew001?: ProNewTreatmentPlanWithVersion;
-        pronew002?: ProNewTreatmentPlanWithVersion;
-        pronew003?: ProNewTreatmentPlanWithVersion;
-        pronew004?: ProNewTreatmentPlanWithVersion;
-        pronew005?: ProNewTreatmentPlanWithVersion;
-        pronew006?: ProNewTreatmentPlanWithVersion;
-        pronew007?: ProNewTreatmentPlanWithVersion;
-    };
-    custom: boolean;
+    ultrasound30Tens0: boolean;
+    ultrasound20Tens10: boolean;
+    ultrasound10Tens20: boolean;
+    ultrasound0Tens30: boolean;
 };
 
 export type ProSetting = {
-    plan: ProPlanSetting;
+    plan: ProNewPlanSetting | ProPlanSetting;
     ultrasoundSetting: UltrasoundSetting;
     tensSetting: TensSetting;
 };
@@ -404,8 +419,11 @@ export type TensSnapshot = {
  * Treatment_Plan_Selected
  */
 export type ProNewPlanSnapshot = {
-    tens: number;
-    ultrasound: number;
+    plan: {
+        tens: number;
+        ultrasound: number;
+    };
+    name: 'pronew001' | 'pronew002' | 'pronew003' | 'pronew004' | 'pronew005' | 'pronew006' | 'pronew007' | 'pronew008';
 };
 
 /**
