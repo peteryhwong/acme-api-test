@@ -3,11 +3,15 @@ import * as client from './client/controller';
 import { LOCAL } from './constant';
 import { createTreatmentSnapshot } from './treatment';
 
-export async function createDeviceReport(
+export async function createDeviceReport(req: {
     deviceCode: string,
     jobHistory: Omit<client.JobHistory, 'detail'> & { detail: Omit<client.JobHistory['detail'], 'treatment'> },
     treatment?: client.TreatmentSnapshot,
-) {
+    plan?: client.ProNewPlanSnapshot,
+}) {
+    const { deviceCode, jobHistory, treatment, plan, } = req;
+    const selectedTreatment = treatment ?? createTreatmentSnapshot();
+    const selectedPlan = plan ?? selectedTreatment.detail.plan;
     const res = await client.createDeviceReportWithKey({
         baseURL: LOCAL.controller.baseUrl,
         headers: {
@@ -19,7 +23,13 @@ export async function createDeviceReport(
                     ...jobHistory,
                     detail: {
                         ...jobHistory.detail,
-                        treatment: treatment ?? createTreatmentSnapshot(),
+                        treatment: {
+                            ...selectedTreatment,
+                            detail: {
+                                ...selectedTreatment.detail,
+                                plan: selectedPlan,
+                            } 
+                        },
                     },
                 },
             ],

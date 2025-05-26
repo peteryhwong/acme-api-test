@@ -52,12 +52,8 @@ async function sendPingToDevice(req: { jwtToken: string; deviceId: string }) {
     return commandId;
 }
 
-async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string }) {
-    const { jwtToken, deviceId, assigneeId, userId } = req;
-
-    console.log(`Create job preset`);
-    const preset = await createJobPreset(jwtToken);
-    console.log(`Created job preset ${JSON.stringify(preset)}`);
+async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string, preset: client.ProNewPlanSetting['preset']  }) {
+    const { jwtToken, deviceId, assigneeId, userId, preset, } = req;
 
     console.log(`Create job`);
     const jobId = await createDeviceJob(jwtToken, {
@@ -74,6 +70,22 @@ async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assign
     expect(job.jobHistory).toHaveLength(0);
     return jobId;
 }
+
+describe(`Create preset JSON`, () => {
+    if (process.env.PRESET !== 'true') {
+        it.skip('Skipping tests because PRESET is not true', () => {});
+        return;
+    }
+
+    it('Create preset JSON', async () => {
+        console.log(`Login as platform user`);
+        const jwtToken = await loginAsPlatformUser(checkAndGetEnvVariable(PLATFORM_USERNAME), checkAndGetEnvVariable(PLATFORM_PASSWORD));
+        console.log(`Got token ${jwtToken}`);
+        console.log(`Create job preset`);
+        const preset = await createJobPreset(jwtToken);
+        console.log(`Created job preset ${JSON.stringify(preset)}`);
+    }, 60000);
+});
 
 describe(`Test with an emulated device`, () => {
     if (process.env.EMULATOR !== 'true') {
@@ -149,6 +161,17 @@ async function createJobPreset(jwtToken: string): Promise<client.ProNewPlanSetti
     return preset;
 }
 
+function presetToPlan(preset: client.ProNewPlanSetting['preset']): client.ProNewPlanSnapshot {
+    console.log(`Select 'pronew001' preset as plan`);
+    return {
+        plan: {
+            tens: preset.pronew001.plan.tens,
+            ultrasound: preset.pronew001.plan.ultrasound,
+        },
+        name: 'pronew001',
+    };
+}
+
 describe(`Add a job to device and have the device report back status to completion`, () => {
     if (process.env.EMULATOR === 'true') {
         it.skip('Skipping tests because EMULATOR is true', () => {});
@@ -188,12 +211,17 @@ describe(`Add a job to device and have the device report back status to completi
             deviceCommands => deviceCommands?.some(command => command.id === pingId && command.status === 'acknowledged') === true,
         );
 
+        console.log(`Create job preset`);
+        const preset = await createJobPreset(jwtToken);
+        console.log(`Created job preset ${JSON.stringify(preset)}`);
+
         console.log(`Create job`);
         const jobId = await sendJobToDevice({
             jwtToken,
             deviceId,
             assigneeId,
             userId,
+            preset,
         });
 
         console.log(`Getting command`);
@@ -209,13 +237,17 @@ describe(`Add a job to device and have the device report back status to completi
         await acknowledge(deviceCode, jobCommand.id);
 
         console.log(`Create report`);
-        const report = await createDeviceReport(deviceCode, {
-            detail: {
-                assigneeUsername,
-                status: 'play',
+        const report = await createDeviceReport({
+            deviceCode, 
+            jobHistory: {
+                detail: {
+                    assigneeUsername,
+                    status: 'play',
+                },
+                jobId,
+                type: 'interim',
             },
-            jobId,
-            type: 'interim',
+            plan: presetToPlan(preset), 
         });
         console.log(`Created report ${report}`);
 
@@ -229,13 +261,17 @@ describe(`Add a job to device and have the device report back status to completi
         console.log(`Job report is processed`);
 
         console.log(`Create completion report`);
-        const completionReport = await createDeviceReport(deviceCode, {
-            detail: {
-                assigneeUsername,
-                status: 'complete',
+        const completionReport = await createDeviceReport({
+            deviceCode, 
+            jobHistory: {
+                detail: {
+                    assigneeUsername,
+                    status: 'complete',
+                },
+                jobId,
+                type: 'completion',
             },
-            jobId,
-            type: 'completion',
+            plan: presetToPlan(preset),
         });
         console.log(`Created report ${completionReport}`);
 
