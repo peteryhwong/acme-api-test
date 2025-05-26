@@ -52,8 +52,12 @@ async function sendPingToDevice(req: { jwtToken: string; deviceId: string }) {
     return commandId;
 }
 
-async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string; preset?: client.ProNewPlanSetting['preset'] }) {
-    const { jwtToken, deviceId, assigneeId, userId, preset } = req;
+async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string }) {
+    const { jwtToken, deviceId, assigneeId, userId } = req;
+
+    console.log(`Create job preset`);
+    const preset = await createJobPreset(jwtToken);
+    console.log(`Created job preset ${JSON.stringify(preset)}`);
 
     console.log(`Create job`);
     const jobId = await createDeviceJob(jwtToken, {
