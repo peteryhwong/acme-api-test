@@ -52,8 +52,8 @@ async function sendPingToDevice(req: { jwtToken: string; deviceId: string }) {
     return commandId;
 }
 
-async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string, preset?: client.ProNewPlanSetting['preset'], }) {
-    const { jwtToken, deviceId, assigneeId, userId, preset, } = req;
+async function sendJobToDevice(req: { jwtToken: string; deviceId: string; assigneeId: string; userId: string; preset?: client.ProNewPlanSetting['preset'] }) {
+    const { jwtToken, deviceId, assigneeId, userId, preset } = req;
 
     console.log(`Create job`);
     const jobId = await createDeviceJob(jwtToken, {
@@ -126,7 +126,7 @@ async function createJobPreset(jwtToken: string): Promise<client.ProNewPlanSetti
             if (plan.plan.tens !== planSetup.tens) {
                 throw new Error(`Plan ${name} tens is not ${planSetup.tens}`);
             }
-            if (plan.plan.ultrasound!== planSetup.ultrasound) {
+            if (plan.plan.ultrasound !== planSetup.ultrasound) {
                 throw new Error(`Plan ${name} ultrasound is not ${planSetup.ultrasound}`);
             }
             plan = await getTreatmentPlanByName(jwtToken, name);

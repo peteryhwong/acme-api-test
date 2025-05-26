@@ -2,7 +2,10 @@ import * as client from './client/controller';
 import { LOCAL } from './constant';
 import { DEFAULT_TREATMENT_PLAN, DEFAULT_TREATMENT_PLAN_PLAN } from './treatment';
 
-export async function createDeviceJob(jwtToken: string, opt: { deviceId: string; assigneeId: string; userId: string; treatmentPlan?: client.BaseJob['treatmentPlan'], preset?: client.ProNewPlanSetting['preset'] }): Promise<string> {
+export async function createDeviceJob(
+    jwtToken: string,
+    opt: { deviceId: string; assigneeId: string; userId: string; treatmentPlan?: client.BaseJob['treatmentPlan']; preset?: client.ProNewPlanSetting['preset'] },
+): Promise<string> {
     const { deviceId, assigneeId, userId, treatmentPlan, preset } = opt;
     const res = await client.createJob({
         baseURL: LOCAL.controller.baseUrl,
@@ -16,7 +19,7 @@ export async function createDeviceJob(jwtToken: string, opt: { deviceId: string;
             assigneeId,
             userId,
             treatmentPlan: {
-                ...treatmentPlan ?? DEFAULT_TREATMENT_PLAN,
+                ...(treatmentPlan ?? DEFAULT_TREATMENT_PLAN),
                 detail: {
                     ...DEFAULT_TREATMENT_PLAN.detail,
                     plan: {
