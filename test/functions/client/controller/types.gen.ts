@@ -17,6 +17,7 @@ export type User = BaseUser & {
 export type BaseAssignee = {
     username: string;
     location: string;
+    role: 'device_admin' | 'device_user' | 'device_maintenance';
 };
 
 export type AssigneeRequest = BaseAssignee & {
@@ -286,6 +287,7 @@ export type BaseJobWithJobIdAndAssigneeAndStatus = BaseJobWithJobId & {
 export type BaseJobWithJobIdAndStatusAndAssigneeAndDeviceId = BaseJobWithJobIdAndAssigneeAndStatus & {
     datetime?: string;
     deviceId: string;
+    offlineJobId?: string;
 };
 
 export type TreatmentWithJobIdAndStatusAndAssigneeAndDeviceId = {
@@ -432,7 +434,7 @@ export type ProNewPlanSnapshot = {
 export type ProPlanSnapshot = 'ultrasound30Tens0' | 'ultrasound20Tens10' | 'ultrasound10Tens20' | 'ultrasound0Tens30' | 'ultrasoundXTensY';
 
 export type ProSnapshot = {
-    plan: ProPlanSnapshot | ProNewPlanSnapshot;
+    plan: ProNewPlanSnapshot | ProPlanSnapshot;
     ultrasoundSnapshot: UltrasoundSnapshot;
     tensSnapshot: TensSnapshot;
 };
@@ -445,6 +447,7 @@ export type TreatmentSnapshot = {
 export type JobHistory = {
     type: 'interim' | 'completion';
     jobId: string;
+    offlineJobId?: string;
     detail: {
         assigneeUsername: string;
         status: 'standby' | 'Standby' | 'play' | 'Play' | 'pause' | 'Pause' | 'frozen' | 'Frozen' | 'complete' | 'Complete' | 'cancelled' | 'Cancel' | 'cancel' | 'abnormal' | 'Abnormal';
@@ -510,6 +513,12 @@ export type Event = {
     };
     status: string;
     deviceId?: string;
+};
+
+export type AuthenticationRequest = {
+    username: string;
+    password: string;
+    type: 'device' | 'user';
 };
 
 export type ValidateAssignee = {
@@ -642,6 +651,35 @@ export type CreateDeviceReportWithKeyResponses = {
 };
 
 export type CreateDeviceReportWithKeyResponse = CreateDeviceReportWithKeyResponses[keyof CreateDeviceReportWithKeyResponses];
+
+export type AuthenticationData = {
+    body?: AuthenticationRequest;
+    path?: never;
+    query?: never;
+    url: '/v1.0/authentication';
+};
+
+export type AuthenticationErrors = {
+    400: ConnectivityError;
+    401: ConnectivityError;
+    403: ConnectivityError;
+    404: ConnectivityError;
+    500: ConnectivityError;
+};
+
+export type AuthenticationError = AuthenticationErrors[keyof AuthenticationErrors];
+
+export type AuthenticationResponses = {
+    200: ConnectivityBase & {
+        object: {
+            valid: boolean;
+            type: string;
+            role: string;
+        };
+    };
+};
+
+export type AuthenticationResponse = AuthenticationResponses[keyof AuthenticationResponses];
 
 export type ValidateAssigneeWithKeyData = {
     body?: ValidateAssignee;
@@ -1255,32 +1293,6 @@ export type GetMasterProgramsResponses = {
 };
 
 export type GetMasterProgramsResponse = GetMasterProgramsResponses[keyof GetMasterProgramsResponses];
-
-export type CreateDeviceReportData = {
-    body?: DeviceReport;
-    path: {
-        deviceId: string;
-    };
-    query?: never;
-    url: '/v1.0/device/{deviceId}/report';
-};
-
-export type CreateDeviceReportErrors = {
-    401: _Error;
-    403: _Error;
-    404: _Error;
-    500: _Error;
-};
-
-export type CreateDeviceReportError = CreateDeviceReportErrors[keyof CreateDeviceReportErrors];
-
-export type CreateDeviceReportResponses = {
-    201: {
-        reportId?: string;
-    };
-};
-
-export type CreateDeviceReportResponse = CreateDeviceReportResponses[keyof CreateDeviceReportResponses];
 
 export type GetTreatmentPlanData = {
     body?: never;

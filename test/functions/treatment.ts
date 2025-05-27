@@ -155,7 +155,7 @@ export function createTreatmentSnapshot(treatmentPlan: client.BaseJob['treatment
             ultrasoundSnapshot: {
                 pulseFrequencyInHz: 1,
                 pulseDutyRatio: 0,
-                temperature: treatmentPlan.detail.ultrasoundSetting.temperatureThreshold,
+                temperature: 10,
                 scheme: 'oneMContinuous',
                 intensity: 9,
                 time: {
