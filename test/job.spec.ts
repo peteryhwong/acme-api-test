@@ -179,7 +179,7 @@ describe(`Add a job to device and have the device report back status to completi
     }
 
     it('Add a job to device and have the device report back status to completion', async () => {
-        console.log(`Login as platform user`);
+        console.log(`Logging into platform`);
         const jwtToken = await loginAsPlatformUser(checkAndGetEnvVariable(PLATFORM_USERNAME), checkAndGetEnvVariable(PLATFORM_PASSWORD));
         console.log(`Got token ${jwtToken}`);
 
