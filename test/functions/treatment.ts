@@ -1,84 +1,36 @@
 import * as client from './client/controller';
 
-export const DEFAULT_TREATMENT_PLAN_PLAN: client.ProNewPlanSetting = {
+export const DEFAULT_REDUCED_TREATMENT_PLAN_PLAN: client.ProNewTreatmentPlanSetting = {
     preset: {
         pronew001: {
-            type: 'pronew',
-            plan: {
-                tens: 10,
-                ultrasound: 20,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
         pronew002: {
-            type: 'pronew',
-            plan: {
-                tens: 10,
-                ultrasound: 20,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
         pronew003: {
-            type: 'pronew',
-            plan: {
-                tens: 20,
-                ultrasound: 10,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
         pronew004: {
-            type: 'pronew',
-            plan: {
-                tens: 10,
-                ultrasound: 20,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
         pronew005: {
-            type: 'pronew',
-            plan: {
-                tens: 10,
-                ultrasound: 20,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
         pronew006: {
-            type: 'pronew',
-            plan: {
-                tens: 0,
-                ultrasound: 20,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
         pronew007: {
-            type: 'pronew',
-            plan: {
-                tens: 10,
-                ultrasound: 20,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
         pronew008: {
-            type: 'pronew',
-            plan: {
-                tens: 10,
-                ultrasound: 20,
-            },
-            version: '2',
             customizable: false,
             enabled: true,
         },
@@ -88,7 +40,7 @@ export const DEFAULT_TREATMENT_PLAN_PLAN: client.ProNewPlanSetting = {
 export const DEFAULT_TREATMENT_PLAN: client.BaseJob['treatmentPlan'] = {
     type: 'pronew',
     detail: {
-        plan: DEFAULT_TREATMENT_PLAN_PLAN,
+        plan: DEFAULT_REDUCED_TREATMENT_PLAN_PLAN,
         ultrasoundSetting: {
             scheme: {
                 oneMContinuous: true,

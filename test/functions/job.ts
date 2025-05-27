@@ -1,6 +1,6 @@
 import * as client from './client/controller';
 import { LOCAL } from './constant';
-import { DEFAULT_TREATMENT_PLAN, DEFAULT_TREATMENT_PLAN_PLAN } from './treatment';
+import { DEFAULT_REDUCED_TREATMENT_PLAN_PLAN, DEFAULT_TREATMENT_PLAN } from './treatment';
 
 export async function createDeviceJob(
     jwtToken: string,
@@ -16,7 +16,7 @@ export async function createDeviceJob(
                 ...DEFAULT_TREATMENT_PLAN.detail,
                 plan: {
                     ...DEFAULT_TREATMENT_PLAN.detail.plan,
-                    preset: preset ?? DEFAULT_TREATMENT_PLAN_PLAN.preset,
+                    preset: preset ?? DEFAULT_REDUCED_TREATMENT_PLAN_PLAN.preset,
                 },
             },
         },
