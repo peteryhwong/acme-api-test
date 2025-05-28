@@ -5,7 +5,7 @@ import { DEFAULT_REDUCED_TREATMENT_PLAN_PLAN, DEFAULT_TREATMENT_PLAN } from './t
 export async function createDeviceJob(
     jwtToken: string,
     opt: { deviceId: string; assigneeId: string; userId: string; treatmentPlan?: client.BaseJob['treatmentPlan']; preset?: client.ProNewPlanSetting['preset'] },
-): Promise<string> {
+) {
     const { deviceId, assigneeId, userId, treatmentPlan, preset } = opt;
     const job: client.BaseJobWithAssignee = {
         assigneeId,
@@ -32,10 +32,10 @@ export async function createDeviceJob(
         },
         body: job,
     });
-    if (!res.data?.jobId) {
+    if (!res.data) {
         throw new Error('create job failed');
     }
-    return res.data.jobId;
+    return res.data;
 }
 
 export async function getJob(jwtToken: string, jobId: string) {
