@@ -1,11 +1,11 @@
 import * as client from './client/controller';
 import { LOCAL } from './constant';
-import { DEFAULT_TREATMENT_PLAN, DEFAULT_TREATMENT_PLAN_PLAN } from './treatment';
+import { DEFAULT_REDUCED_TREATMENT_PLAN_PLAN, DEFAULT_TREATMENT_PLAN } from './treatment';
 
 export async function createDeviceJob(
     jwtToken: string,
     opt: { deviceId: string; assigneeId: string; userId: string; treatmentPlan?: client.BaseJob['treatmentPlan']; preset?: client.ProNewPlanSetting['preset'] },
-): Promise<string> {
+) {
     const { deviceId, assigneeId, userId, treatmentPlan, preset } = opt;
     const job: client.BaseJobWithAssignee = {
         assigneeId,
@@ -16,7 +16,7 @@ export async function createDeviceJob(
                 ...DEFAULT_TREATMENT_PLAN.detail,
                 plan: {
                     ...DEFAULT_TREATMENT_PLAN.detail.plan,
-                    preset: preset ?? DEFAULT_TREATMENT_PLAN_PLAN.preset,
+                    preset: preset ?? DEFAULT_REDUCED_TREATMENT_PLAN_PLAN.preset,
                 },
             },
         },
@@ -32,10 +32,10 @@ export async function createDeviceJob(
         },
         body: job,
     });
-    if (!res.data?.jobId) {
+    if (!res.data) {
         throw new Error('create job failed');
     }
-    return res.data.jobId;
+    return res.data;
 }
 
 export async function getJob(jwtToken: string, jobId: string) {
