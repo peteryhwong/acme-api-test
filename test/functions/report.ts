@@ -33,7 +33,7 @@ export async function createDeviceReport(req: {
     const res = await client.createDeviceReportWithKey({
         baseURL: LOCAL.controller.baseUrl,
         headers: {
-            Authorization: basicAuth(deviceCode, '12345678'),
+            Authorization: basicAuth(`${deviceCode}@ankh`, '12345678'),
         },
         body: report,
     });

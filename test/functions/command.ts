@@ -26,7 +26,7 @@ export async function getCommand(deviceCode: string) {
     const res = await client.getCommandsWithKey({
         baseURL: LOCAL.controller.baseUrl,
         headers: {
-            Authorization: basicAuth(deviceCode, '12345678'),
+            Authorization: basicAuth(`${deviceCode}@ankh`, '12345678'),
         },
     });
     if (!res.data?.object?.command) {
@@ -41,7 +41,7 @@ export async function acknowledge(deviceCode: string, commandId: string) {
     const response = await client.acknowledgeCommandWithKey({
         baseURL: LOCAL.controller.baseUrl,
         headers: {
-            Authorization: basicAuth(deviceCode, '12345678'),
+            Authorization: basicAuth(`${deviceCode}@ankh`, '12345678'),
         },
         body: {
             type: 'acknowledgement',

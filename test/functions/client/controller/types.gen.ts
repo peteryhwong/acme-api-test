@@ -5,7 +5,7 @@ export type JobStatus = 'pendingapproval' | 'pending' | 'standby' | 'play' | 'fr
 export type BaseUser = {
     userNumber: string;
     name: string;
-    location: string;
+    locationId: string;
 };
 
 export type User = BaseUser & {
@@ -18,7 +18,7 @@ export type User = BaseUser & {
 
 export type BaseAssignee = {
     username: string;
-    location: string;
+    locationId: string;
     role: 'device_admin' | 'device_user' | 'device_maintenance';
 };
 
@@ -28,11 +28,11 @@ export type AssigneeRequest = BaseAssignee & {
 
 export type Assignee = BaseAssignee & {
     assigneeId: string;
-    assigneeCode: string;
 };
 
 export type BaseLocation = {
     name: string;
+    group: string;
 };
 
 export type Location = BaseLocation & {
@@ -210,8 +210,15 @@ export type ProNewTreatmentPlanWithVersion = ProNewTreatmentPlan & {
     version: string;
 };
 
-export type TreatmentPlanWithVersionAndName = ProNewTreatmentPlanWithVersion & {
+export type TreatmentPlanCreateRequest = ProNewTreatmentPlan & {
     name: string;
+    group: string;
+};
+
+export type TreatmentPlanWithVersionAndName = ProNewTreatmentPlanWithVersion & {
+    treatmentPlanId: string;
+    name: string;
+    group: string;
     updatedAt: string;
 };
 
@@ -347,6 +354,7 @@ export type BaseJobWithJobIdAndStatusAndAssigneeAndDeviceIdAndHistory = BaseJobW
         jobHistoryId: string;
         author: string;
         type: string;
+        datetime?: string;
     }>;
 };
 
@@ -497,7 +505,7 @@ export type DeviceReport = {
 export type BaseDevice = {
     code: string;
     type: string;
-    location: string;
+    locationId: string;
 };
 
 export type DeviceStatus = {
@@ -544,11 +552,6 @@ export type AuthenticationRequest = {
     type: 'device' | 'user';
 };
 
-export type ValidateAssignee = {
-    username: string;
-    password: string;
-};
-
 export type _Error = {
     error_code: string;
     error_message: string;
@@ -574,6 +577,8 @@ export type AssigneeIdPath = string;
 export type DeviceIdPath = string;
 
 export type JobIdPath = string;
+
+export type TreatmentPlanIdPath = string;
 
 export type JobId = string;
 
@@ -703,33 +708,6 @@ export type AuthenticationResponses = {
 };
 
 export type AuthenticationResponse = AuthenticationResponses[keyof AuthenticationResponses];
-
-export type ValidateAssigneeWithKeyData = {
-    body?: ValidateAssignee;
-    path?: never;
-    query?: never;
-    url: '/v1.0/validation/assignee';
-};
-
-export type ValidateAssigneeWithKeyErrors = {
-    400: ConnectivityError;
-    401: ConnectivityError;
-    403: ConnectivityError;
-    404: ConnectivityError;
-    500: ConnectivityError;
-};
-
-export type ValidateAssigneeWithKeyError = ValidateAssigneeWithKeyErrors[keyof ValidateAssigneeWithKeyErrors];
-
-export type ValidateAssigneeWithKeyResponses = {
-    200: ConnectivityBase & {
-        object: {
-            valid: boolean;
-        };
-    };
-};
-
-export type ValidateAssigneeWithKeyResponse = ValidateAssigneeWithKeyResponses[keyof ValidateAssigneeWithKeyResponses];
 
 export type GetAssigneesData = {
     body?: never;
@@ -1096,6 +1074,7 @@ export type GetJobByIdData = {
 };
 
 export type GetJobByIdErrors = {
+    400: _Error;
     401: _Error;
     403: _Error;
     404: _Error;
@@ -1123,6 +1102,7 @@ export type UpdateJobData = {
 };
 
 export type UpdateJobErrors = {
+    400: _Error;
     401: _Error;
     403: _Error;
     404: _Error;
@@ -1400,37 +1380,59 @@ export type GetTreatmentPlanResponses = {
 
 export type GetTreatmentPlanResponse = GetTreatmentPlanResponses[keyof GetTreatmentPlanResponses];
 
-export type GetTreatmentPlanByNameData = {
-    body?: never;
-    path: {
-        name: string;
-    };
+export type CreateTreatmentPlanData = {
+    body?: TreatmentPlanCreateRequest;
+    path?: never;
     query?: never;
-    url: '/v1.0/treatmentplan/{name}';
+    url: '/v1.0/treatmentplan';
 };
 
-export type GetTreatmentPlanByNameErrors = {
+export type CreateTreatmentPlanErrors = {
     401: _Error;
     403: _Error;
     404: _Error;
     500: _Error;
 };
 
-export type GetTreatmentPlanByNameError = GetTreatmentPlanByNameErrors[keyof GetTreatmentPlanByNameErrors];
+export type CreateTreatmentPlanError = CreateTreatmentPlanErrors[keyof CreateTreatmentPlanErrors];
 
-export type GetTreatmentPlanByNameResponses = {
+export type CreateTreatmentPlanResponses = {
+    201: TreatmentPlanWithVersionAndNameAndHistory;
+};
+
+export type CreateTreatmentPlanResponse = CreateTreatmentPlanResponses[keyof CreateTreatmentPlanResponses];
+
+export type GetTreatmentPlanByIdData = {
+    body?: never;
+    path: {
+        treatmentPlanId: string;
+    };
+    query?: never;
+    url: '/v1.0/treatmentplan/{treatmentPlanId}';
+};
+
+export type GetTreatmentPlanByIdErrors = {
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type GetTreatmentPlanByIdError = GetTreatmentPlanByIdErrors[keyof GetTreatmentPlanByIdErrors];
+
+export type GetTreatmentPlanByIdResponses = {
     200: TreatmentPlanWithVersionAndNameAndHistory;
 };
 
-export type GetTreatmentPlanByNameResponse = GetTreatmentPlanByNameResponses[keyof GetTreatmentPlanByNameResponses];
+export type GetTreatmentPlanByIdResponse = GetTreatmentPlanByIdResponses[keyof GetTreatmentPlanByIdResponses];
 
 export type UpdateTreatmentPlanData = {
     body?: TreatmentPlanUpdate;
     path: {
-        name: string;
+        treatmentPlanId: string;
     };
     query?: never;
-    url: '/v1.0/treatmentplan/{name}';
+    url: '/v1.0/treatmentplan/{treatmentPlanId}';
 };
 
 export type UpdateTreatmentPlanErrors = {
