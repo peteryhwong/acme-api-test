@@ -122,10 +122,12 @@ function presetToPlan(preset: client.ProNewPlanSetting['preset']): client.ProNew
 }
 
 describe(`Add a job to device and have the device report back status to completion`, () => {
-    it('Add a job to device and have the device report back status to completion', async () => {
-        // stdout all env variables
-        console.log(`Env variables: ${JSON.stringify(process.env)}`);
+    if (process.env.EMULATOR === 'true') {
+        it.skip('Skipping tests because EMULATOR is true', () => {});
+        return;
+    }
 
+    it('Add a job to device and have the device report back status to completion', async () => {
         console.log(`Logging into platform`);
         const jwtToken = await loginAsPlatformUser(checkAndGetEnvVariable(PLATFORM_USERNAME), checkAndGetEnvVariable(PLATFORM_PASSWORD));
         console.log(`Got token ${jwtToken}`);
