@@ -3,12 +3,19 @@
 export type Login = {
     username: string;
     password: string;
+    group: string;
+};
+
+export type Group = {
+    id: string;
+    name: string;
 };
 
 export type User = {
     userId: string;
     username: string;
     roles: Array<string>;
+    group: string;
 };
 
 export type UserRequest = Login & {
@@ -37,6 +44,110 @@ export type ErrorMessageObject = {
 export type From = number;
 
 export type Size = number;
+
+/**
+ * Group Id
+ */
+export type GroupId = string;
+
+/**
+ * Group Name
+ */
+export type GroupName = string;
+
+export type GetGroupsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1.0/group';
+};
+
+export type GetGroupsResponses = {
+    200: {
+        group: Array<Group>;
+    };
+};
+
+export type GetGroupsResponse = GetGroupsResponses[keyof GetGroupsResponses];
+
+export type AddGroupData = {
+    body?: {
+        group: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/v1.0/group';
+};
+
+export type AddGroupErrors = {
+    401: _Error;
+    403: _Error;
+    500: _Error;
+};
+
+export type AddGroupError = AddGroupErrors[keyof AddGroupErrors];
+
+export type AddGroupResponses = {
+    201: Group;
+};
+
+export type AddGroupResponse = AddGroupResponses[keyof AddGroupResponses];
+
+export type UpdatePasswordData = {
+    body?: UpdatePassword;
+    path: {
+        /**
+         * User Id
+         */
+        userId: string;
+    };
+    query?: never;
+    url: '/v1.0/user/{userId}/password';
+};
+
+export type UpdatePasswordErrors = {
+    401: _Error;
+    403: _Error;
+    500: _Error;
+};
+
+export type UpdatePasswordError = UpdatePasswordErrors[keyof UpdatePasswordErrors];
+
+export type UpdatePasswordResponses = {
+    200: UpdatePassword;
+};
+
+export type UpdatePasswordResponse = UpdatePasswordResponses[keyof UpdatePasswordResponses];
+
+export type AddRoleData = {
+    body?: {
+        role: string;
+    };
+    path: {
+        /**
+         * User Id
+         */
+        userId: string;
+    };
+    query?: never;
+    url: '/v1.0/user/{userId}/role';
+};
+
+export type AddRoleErrors = {
+    401: _Error;
+    403: _Error;
+    500: _Error;
+};
+
+export type AddRoleError = AddRoleErrors[keyof AddRoleErrors];
+
+export type AddRoleResponses = {
+    201: {
+        role: string;
+    };
+};
+
+export type AddRoleResponse = AddRoleResponses[keyof AddRoleResponses];
 
 export type GetPublicKeyData = {
     body?: never;
@@ -123,62 +234,6 @@ export type CreateTokenResponses = {
 };
 
 export type CreateTokenResponse = CreateTokenResponses[keyof CreateTokenResponses];
-
-export type UpdatePasswordData = {
-    body?: UpdatePassword;
-    path: {
-        /**
-         * User Id
-         */
-        userId: string;
-    };
-    query?: never;
-    url: '/v1.0/user/{userId}/password';
-};
-
-export type UpdatePasswordErrors = {
-    401: _Error;
-    403: _Error;
-    500: _Error;
-};
-
-export type UpdatePasswordError = UpdatePasswordErrors[keyof UpdatePasswordErrors];
-
-export type UpdatePasswordResponses = {
-    200: UpdatePassword;
-};
-
-export type UpdatePasswordResponse = UpdatePasswordResponses[keyof UpdatePasswordResponses];
-
-export type AddRoleData = {
-    body?: {
-        role: string;
-    };
-    path: {
-        /**
-         * User Id
-         */
-        userId: string;
-    };
-    query?: never;
-    url: '/v1.0/user/{userId}/role';
-};
-
-export type AddRoleErrors = {
-    401: _Error;
-    403: _Error;
-    500: _Error;
-};
-
-export type AddRoleError = AddRoleErrors[keyof AddRoleErrors];
-
-export type AddRoleResponses = {
-    201: {
-        role: string;
-    };
-};
-
-export type AddRoleResponse = AddRoleResponses[keyof AddRoleResponses];
 
 export type ClientOptions = {
     baseURL: 'https://api-ext.acme-local.online:22233/user' | 'http://localhost:22222/user' | 'https://{environment}.acme-local.online/user' | (string & {});

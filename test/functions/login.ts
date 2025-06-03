@@ -8,6 +8,7 @@ export async function loginAsPlatformUser(username: string, password: string) {
         body: {
             username,
             password,
+            group: 'ankh',
         },
     });
     if (!res.data?.token) {

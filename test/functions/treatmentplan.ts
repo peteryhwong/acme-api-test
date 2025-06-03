@@ -1,14 +1,14 @@
 import * as client from './client/controller';
 import { LOCAL } from './constant';
 
-export async function updateTreatmentPlan(jwtToken: string, name: string, plan: { tens: number; ultrasound: number }): Promise<client.TreatmentPlanWithVersionAndName> {
+export async function updateTreatmentPlan(jwtToken: string, treatmentPlanId: string, plan: { tens: number; ultrasound: number }): Promise<client.TreatmentPlanWithVersionAndName> {
     const result = await client.updateTreatmentPlan({
         baseURL: LOCAL.controller.baseUrl,
         headers: {
             Authorization: `Bearer ${jwtToken}`,
         },
         path: {
-            name,
+            treatmentPlanId,
         },
         body: {
             plan: {
@@ -19,23 +19,23 @@ export async function updateTreatmentPlan(jwtToken: string, name: string, plan: 
         },
     });
     if (!result.data) {
-        throw new Error(`[updateTreatmentPlan]: fail to update treatment plan ${name}`);
+        throw new Error(`[updateTreatmentPlan]: fail to update treatment plan ${treatmentPlanId}`);
     }
     return result.data;
 }
 
-export async function getTreatmentPlanByName(jwtToken: string, name: string): Promise<client.TreatmentPlanWithVersionAndName> {
-    const result = await client.getTreatmentPlanByName({
+export async function getTreatmentPlanByName(jwtToken: string, treatmentPlanId: string): Promise<client.TreatmentPlanWithVersionAndName> {
+    const result = await client.getTreatmentPlanById({
         baseURL: LOCAL.controller.baseUrl,
         headers: {
             Authorization: `Bearer ${jwtToken}`,
         },
         path: {
-            name,
+            treatmentPlanId,
         },
     });
     if (!result.data) {
-        throw new Error(`[getTreatmentPlanByName]: fail to get treatment plan ${name}`);
+        throw new Error(`[getTreatmentPlanByName]: fail to get treatment plan ${treatmentPlanId}`);
     }
     return result.data;
 }
