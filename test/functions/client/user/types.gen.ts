@@ -23,10 +23,7 @@ export type UserRequest = Login & {
 };
 
 export type UpdatePassword = {
-    password: {
-        old: string;
-        new: string;
-    };
+    password: string;
 };
 
 export type _Error = {

@@ -24,7 +24,7 @@ export async function updateTreatmentPlan(jwtToken: string, treatmentPlanId: str
     return result.data;
 }
 
-export async function getTreatmentPlanByName(jwtToken: string, treatmentPlanId: string): Promise<client.TreatmentPlanWithVersionAndName> {
+export async function getTreatmentPlanById(jwtToken: string, treatmentPlanId: string): Promise<client.TreatmentPlanWithVersionAndName> {
     const result = await client.getTreatmentPlanById({
         baseURL: LOCAL.controller.baseUrl,
         headers: {
@@ -35,7 +35,7 @@ export async function getTreatmentPlanByName(jwtToken: string, treatmentPlanId: 
         },
     });
     if (!result.data) {
-        throw new Error(`[getTreatmentPlanByName]: fail to get treatment plan ${treatmentPlanId}`);
+        throw new Error(`[getTreatmentPlanById]: fail to get treatment plan ${treatmentPlanId}`);
     }
     return result.data;
 }
