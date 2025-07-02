@@ -23,7 +23,7 @@ export type BaseAssignee = {
 };
 
 export type AssigneeRequest = BaseAssignee & {
-    passcode: string;
+    password: string;
 };
 
 export type Assignee = BaseAssignee & {
@@ -210,9 +210,8 @@ export type ProNewTreatmentPlanWithVersion = ProNewTreatmentPlan & {
     version: string;
 };
 
-export type TreatmentPlanCreateRequest = ProNewTreatmentPlan & {
-    name: string;
-    group: string;
+export type TreatmentPlanCreateRequest = {
+    type: 'pronew';
 };
 
 export type TreatmentPlanWithVersionAndName = ProNewTreatmentPlanWithVersion & {
@@ -411,7 +410,7 @@ export type Command = BaseCommand & {
 };
 
 export type CommandWithStatus = Command & {
-    status: 'pending' | 'acknowledged';
+    status: 'pending' | 'pending-processing' | 'acknowledged';
 };
 
 export type UltrasoundSnapshot = {
@@ -496,6 +495,7 @@ export type ErrorHistory = {
     detail: DeviceError;
     type: 'error';
     jobId: string;
+    offlineJobId?: string;
 };
 
 export type DeviceReport = {
@@ -510,6 +510,7 @@ export type BaseDevice = {
 
 export type DeviceStatus = {
     status: 'online' | 'offline' | 'unknown';
+    passwordUpdated?: boolean;
     masterProgramVersion?: string;
 };
 
@@ -527,7 +528,7 @@ export type Device = BaseDevice & {
 };
 
 export type DeviceRequest = BaseDevice & {
-    passcode: string;
+    password: string;
 };
 
 export type EventReport = JobHistory | ErrorHistory | Acknowledgement;
@@ -578,6 +579,8 @@ export type DeviceIdPath = string;
 
 export type JobIdPath = string;
 
+export type GroupPath = string;
+
 export type TreatmentPlanIdPath = string;
 
 export type JobId = string;
@@ -589,7 +592,7 @@ export type CommandId = string;
 /**
  * Command status
  */
-export type CommandStatus = Array<'pending' | 'acknowledged'>;
+export type CommandStatus = Array<'pending' | 'pending-processing' | 'acknowledged'>;
 
 /**
  * Include deleted
@@ -797,6 +800,70 @@ export type DeleteAssigneeResponses = {
 
 export type DeleteAssigneeResponse = DeleteAssigneeResponses[keyof DeleteAssigneeResponses];
 
+export type UpdateAssigneeLocationData = {
+    body?: {
+        locationId: string;
+    };
+    path: {
+        assigneeId: string;
+    };
+    query?: never;
+    url: '/v1.0/assignee/{assigneeId}/location';
+};
+
+export type UpdateAssigneeLocationErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type UpdateAssigneeLocationError = UpdateAssigneeLocationErrors[keyof UpdateAssigneeLocationErrors];
+
+export type UpdateAssigneeLocationResponses = {
+    /**
+     * Assignee location updated
+     */
+    200: {
+        assigneeId: string;
+    };
+};
+
+export type UpdateAssigneeLocationResponse = UpdateAssigneeLocationResponses[keyof UpdateAssigneeLocationResponses];
+
+export type UpdateAssigneePasswordData = {
+    body?: {
+        password: string;
+    };
+    path: {
+        assigneeId: string;
+    };
+    query?: never;
+    url: '/v1.0/assignee/{assigneeId}/password';
+};
+
+export type UpdateAssigneePasswordErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type UpdateAssigneePasswordError = UpdateAssigneePasswordErrors[keyof UpdateAssigneePasswordErrors];
+
+export type UpdateAssigneePasswordResponses = {
+    /**
+     * Assignee password updated
+     */
+    200: {
+        assigneeId: string;
+    };
+};
+
+export type UpdateAssigneePasswordResponse = UpdateAssigneePasswordResponses[keyof UpdateAssigneePasswordResponses];
+
 export type GetCommandsData = {
     body?: never;
     path: {
@@ -806,7 +873,7 @@ export type GetCommandsData = {
         /**
          * Command status
          */
-        status?: Array<'pending' | 'acknowledged'>;
+        status?: Array<'pending' | 'pending-processing' | 'acknowledged'>;
     };
     url: '/v1.0/device/{deviceId}/command';
 };
@@ -957,6 +1024,64 @@ export type GetDeviceByIdResponses = {
 };
 
 export type GetDeviceByIdResponse = GetDeviceByIdResponses[keyof GetDeviceByIdResponses];
+
+export type UpdateDevicePasswordData = {
+    body?: {
+        password: string;
+    };
+    path: {
+        deviceId: string;
+    };
+    query?: never;
+    url: '/v1.0/device/{deviceId}/password';
+};
+
+export type UpdateDevicePasswordErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type UpdateDevicePasswordError = UpdateDevicePasswordErrors[keyof UpdateDevicePasswordErrors];
+
+export type UpdateDevicePasswordResponses = {
+    200: {
+        deviceId: string;
+    };
+};
+
+export type UpdateDevicePasswordResponse = UpdateDevicePasswordResponses[keyof UpdateDevicePasswordResponses];
+
+export type UpdateDeviceLocationData = {
+    body?: {
+        locationId: string;
+    };
+    path: {
+        deviceId: string;
+    };
+    query?: never;
+    url: '/v1.0/device/{deviceId}/location';
+};
+
+export type UpdateDeviceLocationErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type UpdateDeviceLocationError = UpdateDeviceLocationErrors[keyof UpdateDeviceLocationErrors];
+
+export type UpdateDeviceLocationResponses = {
+    200: {
+        deviceId: string;
+    };
+};
+
+export type UpdateDeviceLocationResponse = UpdateDeviceLocationResponses[keyof UpdateDeviceLocationResponses];
 
 export type ListDeviceEventsData = {
     body?: never;
@@ -1356,6 +1481,32 @@ export type GetMasterProgramsResponses = {
 
 export type GetMasterProgramsResponse = GetMasterProgramsResponses[keyof GetMasterProgramsResponses];
 
+export type CreateTreatmentPlanData = {
+    body?: TreatmentPlanCreateRequest;
+    path: {
+        group: string;
+    };
+    query?: never;
+    url: '/v1.0/group/{group}/treatmentplan';
+};
+
+export type CreateTreatmentPlanErrors = {
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type CreateTreatmentPlanError = CreateTreatmentPlanErrors[keyof CreateTreatmentPlanErrors];
+
+export type CreateTreatmentPlanResponses = {
+    201: {
+        treatmentplan?: Array<TreatmentPlanWithVersionAndName>;
+    };
+};
+
+export type CreateTreatmentPlanResponse = CreateTreatmentPlanResponses[keyof CreateTreatmentPlanResponses];
+
 export type GetTreatmentPlanData = {
     body?: never;
     path?: never;
@@ -1379,28 +1530,6 @@ export type GetTreatmentPlanResponses = {
 };
 
 export type GetTreatmentPlanResponse = GetTreatmentPlanResponses[keyof GetTreatmentPlanResponses];
-
-export type CreateTreatmentPlanData = {
-    body?: TreatmentPlanCreateRequest;
-    path?: never;
-    query?: never;
-    url: '/v1.0/treatmentplan';
-};
-
-export type CreateTreatmentPlanErrors = {
-    401: _Error;
-    403: _Error;
-    404: _Error;
-    500: _Error;
-};
-
-export type CreateTreatmentPlanError = CreateTreatmentPlanErrors[keyof CreateTreatmentPlanErrors];
-
-export type CreateTreatmentPlanResponses = {
-    201: TreatmentPlanWithVersionAndNameAndHistory;
-};
-
-export type CreateTreatmentPlanResponse = CreateTreatmentPlanResponses[keyof CreateTreatmentPlanResponses];
 
 export type GetTreatmentPlanByIdData = {
     body?: never;
@@ -1507,6 +1636,38 @@ export type CreateUserResponses = {
 };
 
 export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses];
+
+export type UpdateUserLocationData = {
+    body?: {
+        locationId: string;
+    };
+    path: {
+        userId: string;
+    };
+    query?: never;
+    url: '/v1.0/user/{userId}/location';
+};
+
+export type UpdateUserLocationErrors = {
+    400: _Error;
+    401: _Error;
+    403: _Error;
+    404: _Error;
+    500: _Error;
+};
+
+export type UpdateUserLocationError = UpdateUserLocationErrors[keyof UpdateUserLocationErrors];
+
+export type UpdateUserLocationResponses = {
+    /**
+     * User location updated
+     */
+    200: {
+        userId: string;
+    };
+};
+
+export type UpdateUserLocationResponse = UpdateUserLocationResponses[keyof UpdateUserLocationResponses];
 
 export type DeleteUserData = {
     body?: never;
